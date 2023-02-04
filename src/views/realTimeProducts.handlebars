@@ -1,0 +1,107 @@
+<div class="container-fluid">
+    <h2>List of Products: </h2>
+    <div class="row">
+        {{#each products}}
+            <div class="col">
+                <p><b>Title:</b> {{this.title}}</p>
+                <p><b>Description:</b> {{this.description}}</p>
+                <p><b>Code:</b> {{this.code}}</p>
+                <p><b>Price:</b> {{this.price}}</p>
+                <p><b>Thumbnail: </b>{{this.thumbnail}}</p>
+                <p><b>Status: </b>{{this.status}}</p>
+                <p><b>Stock:</b> {{this.stock}}</p>
+                <p><b>Category:</b> {{this.category}}</p>
+                <form action="" method="get">
+                    <button class="btn btn-danger"><a class="nav-link" href="products/delete/{{this.id}}">Delete Product</a></button>
+                </form>
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalPutProductId{{this.id}}">Edit Product</button>
+            </div>
+
+            <!-- Modal -->
+            <div class="modal fade" id="modalPutProductId{{this.id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h1 class="modal-title fs-5" id="exampleModalLabel">Edit Product</h1>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <form action="products/put/{{this.id}}" method="post">
+                                <div class="mb-3">
+                                    <label for="exampleInputEmail1" class="form-label">Title</label>
+                                    <input type="text" class="form-control" name="title" value="{{this.title}}" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="exampleInputEmail1" class="form-label">Description</label>
+                                    <input type="text" class="form-control" name="description" value="{{this.description}}" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="exampleInputEmail1" class="form-label">Code</label>
+                                    <input type="text" class="form-control" name="code" value="{{this.code}}" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="exampleInputEmail1" class="form-label">Price</label>
+                                    <input type="number" class="form-control" name="price" value="{{this.price}}" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="status">Status:</label>
+                                    <select name="status" id="status">
+                                        <option value="true" selected>True</option>
+                                        <option value="false">False</option>
+                                    </select>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="exampleInputEmail1" class="form-label">Stock</label>
+                                    <input type="number" class="form-control" name="stock" value="{{this.stock}}" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="exampleInputEmail1" class="form-label">Thumbnail</label>
+                                    <input type="file" class="form-control" name="thumbnail" value="{{this.thumbnail}}" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="exampleInputEmail1" class="form-label">Category</label>
+                                    <input type="text" class="form-control" name="category" value="{{this.category}}" required>
+                                </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-primary">Update</button>
+                        </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        {{/each}}
+    </div>
+    <form method="post" action="">
+        <h2>Create Product:</h2>
+        <label for="title">Title</label>
+        <input name="title" id="title" type="text" required>
+        <br>
+        <label for="description">Description</label>
+        <input name="description" id="description" type="text" required>
+        <br>
+        <label for="code">Code</label>
+        <input name="code" id="code" type="text" required>
+        <br>
+        <label for="thumbnail">Thumbnail</label>
+        <input name="thumbnail" id="thumbnail" type="file" required>
+        <br>
+        <label for="price">Price</label>
+        <input name="price" id="price" type="number" required>
+        <br>
+        <label for="status">Status:</label>
+        <select name="status" id="status">
+            <option value="true" selected>True</option>
+            <option value="false">False</option>
+        </select>
+        <br>
+        <label for="stock">Stock</label>
+        <input name="stock" id="stock" type="number" required>
+        <br>
+        <label for="category">Category</label>
+        <input name="category" id="category" type="text" required>
+        <br><br>
+        <button id="btnSend" class="btn btn-success">Create</button>
+    </form>
+</div>

@@ -1,0 +1,118 @@
+.chat-container {
+  height: 100%;
+  width: 100%;
+  overflow: auto;
+  background-color: #f1f1f1;
+  padding: 10px;
+}
+.row-chat{
+  display: flex;
+  flex-direction:row;
+  height: 100%;
+}
+.col-chat{
+  display: flex;
+  flex-direction: column;
+}
+.chat-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 50px;
+  background-color: #2196f3;
+  border-radius: 5px;
+  color: white;
+  padding: 0 20px;
+}
+
+.users-header{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 50px;
+  background-color: #2b2b2b;
+  color: #fff;
+  border-radius: 5px;
+}
+.user{
+  color: black;
+  height: 50px;
+  margin: 20px;
+  padding: 0 10px;
+  border-radius: 5px;
+  background-color: rgb(126, 251, 117);
+
+}
+.cartelConectado{
+  font-weight: bold;
+  text-align: end;
+}
+
+.chat-header h2 {
+  margin: 0;
+  font-size: 18px;
+}
+
+.chat-window {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  overflow: auto;
+}
+
+.chat-message {
+  display: flex;
+  margin: 10px 0;
+}
+
+.chat-message .message-bubble {
+  display: flex;
+  flex-direction: column;
+  padding: 10px 15px;
+  border-radius: 10px;
+  background-color: white;
+}
+.message-sender {
+  justify-content: space-between;
+}
+
+.socketid {
+  font-size: 8px;
+  color: #777;
+}
+.chat-message .message-bubble .message-sender {
+  font-size: 12px;
+  color: #777;
+  margin-bottom: 5px;
+}
+
+.chat-message .message-bubble p {
+  font-size: 14px;
+  margin: 0;
+}
+
+.chat-input-container {
+  display: flex;
+  align-items: center;
+  background-color: white;
+  border-top: 1px solid #ddd;
+  height: 50px;
+  padding: 0 20px;
+}
+
+.chat-input-container input {
+  flex: 1;
+  height: 100%;
+  border: none;
+  font-size: 14px;
+  padding: 0 10px;
+}
+
+.chat-input-container button {
+  height: 100%;
+  background-color: #2196f3;
+  color: white;
+  font-size: 14px;
+  border: none;
+  cursor: pointer;
+}
