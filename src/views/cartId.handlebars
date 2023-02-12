@@ -1,0 +1,23 @@
+<div class="container">
+    <div class="table-responsive">
+        <table class="table table-striped table-hover border-primary">
+            <thead class="text-center justify-content-center">
+                <tr class="table"><td colSpan="6" class="fs-4 fw-bold">Your Cart</td></tr>
+                <tr class="table">
+                    <th scope="col">Product</th>
+                    <th scope="col">Detail</th>
+                    <th scope="col">Quantity</th>
+                </tr>
+            </thead>
+                <tbody class="text-center align-middle table-secondary">
+                    {{#each cart.products}}
+                    <tr>
+                        <td>{{this.product.title}}</td>
+                        <td>{{this.product.description}}</td>
+                        <td>{{this.quantity}}</td>
+                    </tr>
+                    {{/each}}
+                </tbody>
+        </table>
+    </div>
+</div>

@@ -10,6 +10,7 @@ const messagesRouter = require("./src/routes/messagesRouter");
 const messagesModel = require("./src/data/models/messagesModel");
 const chatRouter = require("./src/routes/chatRouter");
 const { allowInsecurePrototypeAccess } = require('@handlebars/allow-prototype-access');
+const methodOverride = require("method-override");
 
 dotenv.config();
 const app = express();
@@ -31,6 +32,8 @@ app.set("views", __dirname + "/src/views");
 app.set("view engine", "handlebars");
 app.use(express.static(__dirname + "/src/public"));
 
+
+app.use(methodOverride("_method"));
 app.use("/api/products", productsRouter);
 app.use("/api/carts", cartsRouter);
 app.post("/socketMessage", (req, res) => {
