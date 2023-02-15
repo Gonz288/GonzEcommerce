@@ -75,9 +75,9 @@ class CartManager {
                 });
                 return resultSave;
             }else{
-                for(let i = 0; i < productsArray.length; i++){ // 3
+                for(let i = 0; i < productsArray.length; i++){
                     let InCart = false;
-                    for(let x = 0; x < result[0].products.length; x++){// 3
+                    for(let x = 0; x < result[0].products.length; x++){
                         if(productsArray[i]._id === result[0].products[x].product.toString()){
                             result[0].products[x].quantity = result[0].products[x].quantity + productsArray[i].quantity;
                             InCart = true;
@@ -127,7 +127,7 @@ class CartManager {
     async deleteProductFromCart(cartId, productId){
         try{
             const result = await cartModel.find({_id: cartId});
-            const index = result[0].products.findIndex((product) => product._id === productId);
+            const index = result[0].products.findIndex((product) => product.product.toString() === productId);
             if(index !== -1){
                 result[0].products.splice(index,1);
                 const resultSave = await cartModel.findByIdAndUpdate(cartId, {
