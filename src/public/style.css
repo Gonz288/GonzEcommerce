@@ -116,3 +116,14 @@
   border: none;
   cursor: pointer;
 }
+
+.signIn-container, .signUp-container{
+  display: flex;
+  place-items: center;
+  justify-content: center;
+  height: 100vh;
+}
+.card{
+  width: 680px;
+  padding: 25px;
+}

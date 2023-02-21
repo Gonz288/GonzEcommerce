@@ -5,47 +5,51 @@ const productManager = new ProductManager();
 const productsModel = require("../data/models/productsModel");
 
 productsRouter.get("/", async (req, res) => {
-    const limit = req.query.limit || 5;
-    let optionsUrl = `?limit=${limit}`;
-    let page = parseInt(req.query.page) || 1;
-    if(req.query.sort){
-      if(!optionsUrl.includes("sort")){
-        optionsUrl = optionsUrl + `&sort=${req.query.sort}`;
+    if(req.session.user){
+      const limit = req.query.limit || 5;
+      let optionsUrl = `?limit=${limit}`;
+      let page = parseInt(req.query.page) || 1;
+      if(req.query.sort){
+        if(!optionsUrl.includes("sort")){
+          optionsUrl = optionsUrl + `&sort=${req.query.sort}`;
+        }
       }
-    }
 
-    let filterPage;
-    if(req.query.category){
-      filterPage = {category: req.query.category}
-      if(!optionsUrl.includes("category")){
-        optionsUrl = optionsUrl + `&category=${req.query.category}`
+      let filterPage;
+      if(req.query.category){
+        filterPage = {category: req.query.category}
+        if(!optionsUrl.includes("category")){
+          optionsUrl = optionsUrl + `&category=${req.query.category}`
+        }
+      }else if(req.query.status){
+        filterPage = {status: req.query.status}
+        if(!optionsUrl.includes("status")){
+          optionsUrl = optionsUrl + `&status=${req.query.status}`
+        }
+      }else{
+        filterPage = {}
       }
-    }else if(req.query.status){
-      filterPage = {status: req.query.status}
-      if(!optionsUrl.includes("status")){
-        optionsUrl = optionsUrl + `&status=${req.query.status}`
+
+      const options = {page: page, limit: limit, sort: req.query.sort ? {price: req.query.sort} : {}};
+      try {
+        let productsPage = await productsModel.paginate( filterPage, options);
+        const object = {
+          status: "success",
+          payload: productsPage.docs,
+          totalPages: productsPage.totalPages,
+          prevPage: productsPage.prevPage,
+          nextPage: productsPage.nextPage,
+          hasPrevPage: productsPage.hasPrevPage,
+          hasNextPage: productsPage.hasNextPage,
+          prevLink: productsPage.hasPrevPage != false ? `${optionsUrl}&page=${page - 1}` : null,
+          nextLink: productsPage.hasNextPage != false ? `${optionsUrl}&page=${page + 1}` : null,
+        }
+        res.status(200).render("realTimeProducts", {object});
+      } catch (err) {
+        res.status(500).send(err.message);
       }
     }else{
-      filterPage = {}
-    }
-
-    const options = {page: page, limit: limit, sort: req.query.sort ? {price: req.query.sort} : {}};
-    try {
-      let productsPage = await productsModel.paginate( filterPage, options);
-      const object = {
-        status: "success",
-        payload: productsPage.docs,
-        totalPages: productsPage.totalPages,
-        prevPage: productsPage.prevPage,
-        nextPage: productsPage.nextPage,
-        hasPrevPage: productsPage.hasPrevPage,
-        hasNextPage: productsPage.hasNextPage,
-        prevLink: productsPage.hasPrevPage != false ? `${optionsUrl}&page=${page - 1}` : null,
-        nextLink: productsPage.hasNextPage != false ? `${optionsUrl}&page=${page + 1}` : null,
-      }
-      res.status(200).render("realTimeProducts", {object});
-    } catch (err) {
-      res.status(500).send(err.message);
+      res.status(404).redirect("/login");
     }
 });
 

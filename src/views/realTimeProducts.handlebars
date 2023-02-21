@@ -1,4 +1,30 @@
-<div class="container-fluid">
+<nav class="navbar bg-dark navbar-dark navbar-expand-lg">
+    <div class="container-fluid">
+        <a href="/api/products" class="navbar-brand">Productos</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav me-auto">
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        {{user.firstname}}
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="#">Profile</a></li>
+                        <li><a class="dropdown-item" href="/logout">Logout</a></li>
+                    </ul>
+                </li>        
+            </ul>
+            <span class="navbar-text">
+                Rol: {{#if user.admin}} Admin {{else}} Usuario {{/if}}
+            </span>
+        </div>
+    </div>
+</nav>
+
+<div class="container-fluid mt-5">
+    <h1 class="text-center mb-5">Bienvenido {{user.firstname}}</h1>
     <h2>List of Products: </h2>
     <div class="row">
         {{#each object.payload}}
