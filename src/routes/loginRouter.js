@@ -1,28 +1,21 @@
 const express = require("express");
 const routerLogin = express.Router();
+const passport = require("passport");
 const usersModel = require("../data/models/usersModel");
 
 routerLogin.get("/", (req, res) =>{
     res.render("login", {title: "Login"});
 });
 
-routerLogin.post("/", async (req,res) =>{
-    const {email , password} = req.body;
-    if (!email || !password) {
-        res.status(400).redirect("/login");
-        return;
+routerLogin.post("/", passport.authenticate("login", {failureRedirect:"/login"}),async (req,res) =>{
+    if(!req.user) return res.status(400).send({status:"error", error:"invalid credentials"});
+    req.session.user = {
+        firstname: req.user.firstname,
+        lastname: req.user.lastname,
+        age: req.user.age,
+        email: req.user.email
     }
-    try{
-        const response = await usersModel.findOne({email: email, passord: password});
-        if(response){
-            req.session.user = response;
-            res.status(200).redirect("/api/products");
-        }else{
-            res.status(404).redirect("/login");
-        }
-    }catch(error){
-        res.status(500).redirect("/login");
-    }
+    res.status(200).redirect("api/products");
 });
 
 module.exports = routerLogin;

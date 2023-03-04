@@ -15,6 +15,9 @@ const { allowInsecurePrototypeAccess } = require('@handlebars/allow-prototype-ac
 const methodOverride = require("method-override");
 const MongoStore = require("connect-mongo");
 const session = require("express-session");
+const initializePassport = require("./src/config/pasport.config");
+const passport = require("passport");
+const sessionRouter = require("./src/routes/sessionsRouter");
 
 dotenv.config();
 const app = express();
@@ -37,6 +40,7 @@ app.use(express.static(__dirname + "/src/public"));
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
 app.use(methodOverride("_method"));
+initializePassport();
 app.use(
     session({
         secret: "coderhouse",
@@ -51,6 +55,9 @@ app.use(
         }),
     })
 );
+app.use(passport.initialize());
+app.use(passport.session());
+app.use("/api/sessions", sessionRouter);
 
 //Global Variables
 app.use((req, res, next)=>{
