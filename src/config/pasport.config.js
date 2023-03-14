@@ -15,7 +15,8 @@ const initializePassport = () =>{
     });
     passport.use("register", new LocalStrategy(
         {passReqToCallback:true, usernameField: "email"}, async(req,username,password,done)=>{
-            const {firstname, lastname, email,age} = req.body;
+            const {firstname, lastname, email, age} = req.body;
+            let {admin} = req.body;
             try{
                 let user = await usersModel.findOne({email:username});
                 if(user){
@@ -24,6 +25,7 @@ const initializePassport = () =>{
                 const newUser = {
                     firstname,
                     lastname,
+                    admin,
                     email,
                     age,
                     password: bcrypt.hashSync(password, bcrypt.genSaltSync(10))

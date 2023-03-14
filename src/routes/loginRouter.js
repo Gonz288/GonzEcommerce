@@ -13,6 +13,7 @@ routerLogin.post("/", passport.authenticate("login", {failureRedirect:"/login"})
         firstname: req.user.firstname,
         lastname: req.user.lastname,
         age: req.user.age,
+        admin: req.user.admin,
         email: req.user.email
     }
     res.status(200).redirect("api/products");

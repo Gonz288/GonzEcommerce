@@ -8,6 +8,7 @@ const usersSchema = new mongoose.Schema({
     age: {type: Number},
     email: {type: String},
     admin: {type: Boolean},
+    cart: {type: String},
     password: {type: String}
 }, {versionKey: false});
 
