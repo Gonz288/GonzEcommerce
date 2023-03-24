@@ -1,6 +1,5 @@
-const { isObjectIdOrHexString } = require("mongoose");
-const cartModel = require("../models/cartsModel.js");
-const productModel = require("../models/productsModel.js");
+const productModel = require("./models/productsModel");
+const cartModel = require("./models/cartsModel");
 
 class CartManager {
     async read() {
@@ -9,7 +8,7 @@ class CartManager {
             return carts;
         }catch (err) {
             throw err;
-            }
+        }
     }
     async readById(cartId){
         try {
@@ -182,4 +181,4 @@ class ProductManager {
     }
 }
 
-module.exports = { CartManager, ProductManager };
+module.exports = {ProductManager, CartManager};

@@ -1,7 +1,7 @@
 const passport = require("passport");
 const local = require("passport-local");
 const GitHubStrategy = require("passport-github2");
-const usersModel = require("../data/models/usersModel");
+const usersModel = require("../dao/mongo/models/usersModel");
 const bcrypt = require("bcrypt");
 
 const LocalStrategy = local.Strategy;

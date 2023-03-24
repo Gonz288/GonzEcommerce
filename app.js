@@ -1,5 +1,5 @@
 const express = require("express");
-const dotenv = require("dotenv");
+const config = require("./config");
 const mongoose = require("mongoose");
 const productsRouter = require("./src/routes/productsRouter");
 const cartsRouter = require("./src/routes/cartsRouter");
@@ -7,7 +7,7 @@ const handlebars = require("express-handlebars");
 const Handlebars = require("handlebars");
 const {Server} = require("socket.io");
 const messagesRouter = require("./src/routes/messagesRouter");
-const messagesModel = require("./src/data/models/messagesModel");
+const messagesModel = require("./src/dao/mongo/models/messagesModel");
 const loginRouter = require("./src/routes/loginRouter");
 const signupRouter = require("./src/routes/signupRouter");
 const chatRouter = require("./src/routes/chatRouter");
@@ -19,16 +19,11 @@ const initializePassport = require("./src/config/pasport.config");
 const passport = require("passport");
 const sessionRouter = require("./src/routes/sessionsRouter");
 
-dotenv.config();
 const app = express();
 
-const PORT = process.env.SERVER_PORT || 8081;
-const DB_USER = process.env.DB_USER;
-const DB_PASS = process.env.DB_PASS;
-const DB_NAME = process.env.DB_NAME;
-const STRING_CONNECTION = `mongodb+srv://${DB_USER}:${DB_PASS}@codercluster.zrkv6ij.mongodb.net/${DB_NAME}?retryWrites=true&w=majority`;
+const STRING_CONNECTION = `mongodb+srv://${config.DB_USER}:${config.DB_PASS}@codercluster.zrkv6ij.mongodb.net/${config.DB_NAME}?retryWrites=true&w=majority`;
 
-const httpServer = app.listen(PORT, ()=>{console.log(`Server running on port ${PORT}`)});
+const httpServer = app.listen(config.PORT, ()=>{console.log(`Server running on port ${config.PORT}`)});
 
 //Handlebars
 app.engine("handlebars", handlebars.engine({defaultLayout: 'main',handlebars: allowInsecurePrototypeAccess(Handlebars)}));
@@ -92,7 +87,7 @@ const environment = async () => {
     }
 };
 const isValidStartData = () => {
-    if (DB_PASS && DB_USER) return true;
+    if (config.DB_PASS && config.DB_USER) return true;
     else return false;
 };
 isValidStartData() && environment();

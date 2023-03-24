@@ -1,6 +1,6 @@
 const express = require("express");
 const messagesRouter = express.Router();
-const messagesModel = require("../data/models/messagesModel");
+const messagesModel = require("../dao/mongo/models/messagesModel");
 
 messagesRouter.get("/", async (req, res) => {
     try {

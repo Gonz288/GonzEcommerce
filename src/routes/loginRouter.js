@@ -1,7 +1,7 @@
 const express = require("express");
 const routerLogin = express.Router();
 const passport = require("passport");
-const usersModel = require("../data/models/usersModel");
+const usersModel = require("../dao/mongo/models/usersModel");
 
 routerLogin.get("/", (req, res) =>{
     res.render("login", {title: "Login"});
