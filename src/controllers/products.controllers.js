@@ -1,6 +1,6 @@
-const { ProductManager } = require("../dao/mongo/DBManager.js");
-const productManager = new ProductManager();
-const productsModel = require("../dao/mongo/models/productsModel");
+const {Products} = require("../dao/factory");
+const {ProductsRepository} = require("../repositories/products.repository");
+const productsService = new ProductsRepository(new Products());
 
 const getAllProducts = async (req, res) => {
     if(req.session.user){
@@ -30,7 +30,7 @@ const getAllProducts = async (req, res) => {
 
         const options = {page: page, limit: limit, sort: req.query.sort ? {price: req.query.sort} : {}};
         try {
-            let productsPage = await productsModel.paginate( filterPage, options);
+            let productsPage = await productsService.get(filterPage, options)
             const object = {
             status: "success",
             payload: productsPage.docs,
@@ -52,85 +52,62 @@ const getAllProducts = async (req, res) => {
 }
 
 const createProduct = async (req, res) =>{
-    const {
-        title,
-        description,
-        code,
-        price,
-        thumbnail,
-        stock,
-        category,
-        status,
-    } = req.body;
-    
-    if (
-        !title ||
-        !description ||
-        !code ||
-        !price ||
-        !thumbnail ||
-        !stock ||
-        !category ||
-        !status
-        ) {
-        res.status(400).redirect("/api/products");
-        return;
-    }
-    
-    try {
-        const response = await productManager.create({
-        title,
-        description,
-        code,
-        price,
-        thumbnail,
-        stock,
-        category,
-        status,
-        });
-        const product = await productManager.read();
-        res.status(200).redirect("/api/products");
-    } catch (err) {
-        res.status(500).redirect("/api/products");
-    }
+        if(req.session.user.admin){
+            const {
+                title,
+                description,
+                code,
+                price,
+                thumbnail,
+                stock,
+                category,
+                status,
+            } = req.body;
+            
+            if (
+                !title ||
+                !description ||
+                !code ||
+                !price ||
+                !thumbnail ||
+                !stock ||
+                !category ||
+                !status
+                ) {
+                res.status(400).redirect("/api/products");
+                return;
+            }
+            
+            try {
+                const myProduct = {title,description,code,price,thumbnail,stock,category,status};
+                const response = await productsService.create(myProduct);
+                res.status(200).redirect("/api/products");
+            } catch (err) {
+                res.status(500).redirect("/api/products");
+            }
+        }else{
+            res.status(401).send("No tienes Acceso.")
+        }
 }
 
-const deleleteProduct = async (req,res) =>{
-    const { id } = req.params;
-    try {
-        const result = await productManager.delete(id);
-        res.status(200).redirect("/api/products");
-    } catch (err) {
-        res.status(500).redirect("/api/products");
+const deleteProduct = async (req,res) =>{
+    if(req.session.user.admin){
+        const { id } = req.params;
+        try {
+            const result = await productsService.delete(id);
+            res.status(200).redirect("/api/products");
+        } catch (err) {
+            res.status(500).redirect("/api/products");
+        }
+    }else{
+        res.status(401).send("No tienes Acceso");
     }
 }
 
 const updateProduct = async (req,res) =>{
-    const { id } = req.params;
-    const {
-        title,
-        description,
-        code,
-        price,
-        thumbnail,
-        stock,
-        category,
-        status,
-    } = req.body;
-    if (
-        !title ||
-        !description ||
-        !code ||
-        !price ||
-        !thumbnail ||
-        !stock ||
-        !category
-    ) {
-        res.status(400).redirect("/api/products");
-        return;
-    }
-    try {
-        const result = await productManager.update(id, {
+    if(req.session.user.admin){
+        const { id } = req.params;
+        const {
             title,
             description,
             code,
@@ -139,11 +116,37 @@ const updateProduct = async (req,res) =>{
             stock,
             category,
             status,
-        });
-        res.status(200).redirect("/api/products");
-    } catch (err) {
-        res.status(500).redirect("/api/products");
+        } = req.body;
+        if (
+            !title ||
+            !description ||
+            !code ||
+            !price ||
+            !thumbnail ||
+            !stock ||
+            !category
+        ) {
+            res.status(400).redirect("/api/products");
+            return;
+        }
+        try {
+            const result = await productsService.update(id, {
+                title,
+                description,
+                code,
+                price,
+                thumbnail,
+                stock,
+                category,
+                status,
+            });
+            res.status(200).redirect("/api/products");
+        } catch (err) {
+            res.status(500).redirect("/api/products");
+        }
+    }else{
+        res.status(401).send("No tienes Acceso");
     }
 }
 
-module.exports = {getAllProducts, createProduct, deleleteProduct, updateProduct};
+module.exports = {getAllProducts, createProduct, deleteProduct, updateProduct};

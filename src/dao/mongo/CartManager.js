@@ -1,8 +1,10 @@
-const productModel = require("./models/productsModel");
 const cartModel = require("./models/cartsModel");
+const productModel = require("./models/productsModel");
+const ticketModel = require("./models/ticketModel");
+const Crypto = require("crypto");
 
 class CartManager {
-    async read() {
+    async get() {
         try {
             const carts = await cartModel.find().populate("products.product");
             return carts;
@@ -10,7 +12,7 @@ class CartManager {
             throw err;
         }
     }
-    async readById(cartId){
+    async getOne(cartId){
         try {
             const cart = await cartModel.findById({_id: cartId}).populate("products.product");
             return cart;
@@ -27,7 +29,7 @@ class CartManager {
             throw err;
         }
     }
-    async delete(cartId) {
+    async deleteCart(cartId) {
         try {
             const result = await cartModel.findByIdAndDelete(cartId);
             return result;
@@ -35,7 +37,7 @@ class CartManager {
             throw err;
         }
     }
-    async update(cartId, productId) {
+    async addProduct(cartId, productId) {
         const myProduct = {
             product: productId,
             quantity: 1,
@@ -111,7 +113,7 @@ class CartManager {
             throw err;
         }
     }
-    async deleteAllProductsFromCart(cartId){
+    async deleteAllProducts(cartId){
         try{
             const result = await cartModel.find({_id: cartId});
             result[0].products.length = 0;
@@ -123,7 +125,7 @@ class CartManager {
             throw err;
         }
     }
-    async deleteProductFromCart(cartId, productId){
+    async deleteProduct(cartId, productId){
         try{
             const result = await cartModel.find({_id: cartId});
             const index = result[0].products.findIndex((product) => product.product.toString() === productId);
@@ -140,45 +142,45 @@ class CartManager {
             throw err;
         }
     }
-}
-
-class ProductManager {
-    async read() {
+    async finalizePurchase(cid,userEmail){
         try{
-            const products = await productModel.find();
-        return products;
-        }catch(err){
-            throw err;
-        }
-    }
-
-    async create(product) {
-        try {
-            const newProduct = new productModel(product);
-            await newProduct.save();
-            return newProduct;
-        } catch (err) {
-            throw err;
-        }
-    }
-
-    async delete(productId) {
-        try {
-            const result = await productModel.findByIdAndDelete(productId);
-            return result;
-        }catch(err){
-            throw err;
-        }
-    }
-    
-    async update(productId, product) {
-        try {
-            const result = await productModel.findByIdAndUpdate(productId, product);
-            return result;
-        }catch(err){
-            throw err;
+            const cart = await cartModel.findById({_id: cid}).populate("products.product");
+            if(cart.products.length === 0){
+                console.log("No hay productos en el carrito");
+            }else{
+                const productsPurchase = [];
+                let totalPrice = 0;
+                for(let i = 0; i < cart.products.length; i++){
+                    if(cart.products[i].quantity > cart.products[i].product.stock){
+                        console.log("No hay suficiente stock de ese producto");
+                    }else{
+                        let newStock = cart.products[i].product.stock - cart.products[i].quantity;
+                        totalPrice = totalPrice + (cart.products[i].quantity * cart.products[i].product.price);
+                        productsPurchase.push(cart.products[i]);
+                        let saveProduct = await productModel.findByIdAndUpdate(cart.products[i].product._id, {stock: newStock});
+                        cart.products.splice(i,1);
+                        i--;
+                    }
+                }
+                if(productsPurchase.length != 0){
+                    let saveCart = await cartModel.findByIdAndUpdate(cid, {products: cart.products});
+                    const myTicket = {
+                        code: Crypto.randomBytes(16).toString("hex").substring(0, 6),
+                        purchase_datetime: new Date(),
+                        amount: totalPrice,
+                        products: productsPurchase,
+                        purchaser: userEmail
+                    }
+                    const ticket = await ticketModel.create(myTicket);
+                    return ticket;
+                }else{
+                    return "No se pudo completar la compra.";
+                }
+            }
+        }catch(error){
+            throw error;
         }
     }
 }
 
-module.exports = {ProductManager, CartManager};
+module.exports = {CartManager};

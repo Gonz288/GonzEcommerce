@@ -19,5 +19,8 @@
                     {{/each}}
                 </tbody>
         </table>
+        {{#if cart}}
+            <button class="btn btn-success"><a href="{{cart._id}}/purchase">Finalize Purchase</a></button>
+        {{/if}}
     </div>
 </div>

@@ -3,6 +3,7 @@ const local = require("passport-local");
 const GitHubStrategy = require("passport-github2");
 const usersModel = require("../dao/mongo/models/usersModel");
 const bcrypt = require("bcrypt");
+const cartModel = require("../dao/mongo/models/cartsModel");
 
 const LocalStrategy = local.Strategy;
 const initializePassport = () =>{

@@ -1,5 +1,5 @@
 const express = require("express");
-const config = require("./config");
+const config = require("./src/config/config");
 const mongoose = require("mongoose");
 const productsRouter = require("./src/routes/productsRouter");
 const cartsRouter = require("./src/routes/cartsRouter");
@@ -18,6 +18,7 @@ const session = require("express-session");
 const initializePassport = require("./src/config/pasport.config");
 const passport = require("passport");
 const sessionRouter = require("./src/routes/sessionsRouter");
+const ticketRouter = require("./src/routes/ticketRouter");
 
 const app = express();
 
@@ -71,26 +72,12 @@ app.post("/socketMessage", (req, res) => {
 app.use("/messages", messagesRouter);
 app.use("/chat", chatRouter);
 app.use("/login", loginRouter);
+app.use("/ticket", ticketRouter);
 app.use("/signup", signupRouter);
 app.get("/logout", (req,res) =>{
     req.session.destroy();
     res.redirect("/login");
 });
-
-//MongoDB
-const environment = async () => {
-    try {
-        await mongoose.connect(STRING_CONNECTION);
-        console.log("Conectado a MongoDB");
-    } catch (error) {
-        console.log(`Error al conectar a MongoDB: ${error}`);
-    }
-};
-const isValidStartData = () => {
-    if (config.DB_PASS && config.DB_USER) return true;
-    else return false;
-};
-isValidStartData() && environment();
 
 //WebChat
 const messages = [];
