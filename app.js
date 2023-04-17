@@ -19,6 +19,8 @@ const initializePassport = require("./src/config/pasport.config");
 const passport = require("passport");
 const sessionRouter = require("./src/routes/sessionsRouter");
 const ticketRouter = require("./src/routes/ticketRouter");
+const mockingRouter = require("./src/routes/mockingRouter");
+const errorHandler = require("./src/middlewares/errors/index");
 
 const app = express();
 
@@ -54,6 +56,7 @@ app.use(
 app.use(passport.initialize());
 app.use(passport.session());
 app.use("/api/sessions", sessionRouter);
+app.use(errorHandler);
 
 //Global Variables
 app.use((req, res, next)=>{
@@ -62,6 +65,7 @@ app.use((req, res, next)=>{
 });
 
 //Routes
+app.use("/mockingProducts", mockingRouter);
 app.use("/api/products", productsRouter);
 app.use("/api/carts", cartsRouter);
 app.post("/socketMessage", (req, res) => {

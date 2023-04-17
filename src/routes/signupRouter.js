@@ -2,6 +2,9 @@ const express = require("express");
 const routersignup = express.Router();
 const usersModel = require("../dao/mongo/models/usersModel");
 const passport = require("passport");
+const CustomError = require("../services/errors/customError");
+const EErrors = require("../services/errors/enums");
+const generateUserErrorInfo = require("../services/errors/info");
 
 routersignup.get("/", (req, res) =>{
     res.render("signup", {title: "Register"});
@@ -11,6 +14,12 @@ routersignup.post("/", passport.authenticate("register", {failureRedirect: "/fai
     const {email, password, confirm_password, firstname, lastname, age} = req.body;
     let {admin} = req.body;
     if(!email ||!password || !confirm_password ||!firstname ||!lastname ||!age || !admin && password !== confirm_password) {
+        CustomError.createError({
+            name: "User creation error",
+            cause: generateUserErrorInfo({firstname,lastname,age,email}),
+            message: "Error Trying to create User",
+            code: EErrors.INVALID_TYPES_ERROR
+        });
         res.status(400).redirect("/signup");
         return;
     }else{
