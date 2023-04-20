@@ -21,12 +21,13 @@ const sessionRouter = require("./src/routes/sessionsRouter");
 const ticketRouter = require("./src/routes/ticketRouter");
 const mockingRouter = require("./src/routes/mockingRouter");
 const errorHandler = require("./src/middlewares/errors/index");
-
+const {addLogger} = require("./src/config/utils");
+const {logger} = require("./src/config/utils");
 const app = express();
 
 const STRING_CONNECTION = `mongodb+srv://${config.DB_USER}:${config.DB_PASS}@codercluster.zrkv6ij.mongodb.net/${config.DB_NAME}?retryWrites=true&w=majority`;
 
-const httpServer = app.listen(config.PORT, ()=>{console.log(`Server running on port ${config.PORT}`)});
+const httpServer = app.listen(config.PORT, ()=>{logger.info(`Server running on port ${config.PORT}`)});
 
 //Handlebars
 app.engine("handlebars", handlebars.engine({defaultLayout: 'main',handlebars: allowInsecurePrototypeAccess(Handlebars)}));
@@ -57,6 +58,7 @@ app.use(passport.initialize());
 app.use(passport.session());
 app.use("/api/sessions", sessionRouter);
 app.use(errorHandler);
+app.use(addLogger);
 
 //Global Variables
 app.use((req, res, next)=>{
@@ -65,6 +67,15 @@ app.use((req, res, next)=>{
 });
 
 //Routes
+app.get("/loggerTest", (req,res)=>{
+    req.logger.debug("Prueba de debug");
+    req.logger.info("Prueba de info");
+    req.logger.warning("Prueba de warning");
+    req.logger.fatal("Prueba de fatal");
+    req.logger.error("Prueba de error");
+    req.logger.http("Prueba de http");
+    res.send({message: "Prueba de Logger"});
+});
 app.use("/mockingProducts", mockingRouter);
 app.use("/api/products", productsRouter);
 app.use("/api/carts", cartsRouter);

@@ -4,6 +4,7 @@ const GitHubStrategy = require("passport-github2");
 const usersModel = require("../dao/mongo/models/usersModel");
 const bcrypt = require("bcrypt");
 const cartModel = require("../dao/mongo/models/cartsModel");
+const {logger} = require("./utils");
 
 const LocalStrategy = local.Strategy;
 const initializePassport = () =>{
@@ -34,6 +35,7 @@ const initializePassport = () =>{
                 let result = await usersModel.create(newUser);
                 return done(null,result);
             }catch(error){
+                logger.error(`Failed Register: ${error}`)
                 return done("Error:" + error);
             }
         }
@@ -48,6 +50,7 @@ const initializePassport = () =>{
             if(!bcrypt.compareSync(password,user.password)) return done(null, false);
             return done(null,user);
         }catch(error){
+            logger.error(`Failed Login: ${error}`)
             return done(error);
         }
     }));
@@ -73,6 +76,7 @@ const initializePassport = () =>{
                 done(null, user);
             }
         }catch(error){
+            logger.error(`Login with Github Failed: ${error}`);
             return done(error);
         }
     }
