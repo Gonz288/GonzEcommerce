@@ -23,6 +23,7 @@ const mockingRouter = require("./src/routes/mockingRouter");
 const errorHandler = require("./src/middlewares/errors/index");
 const {addLogger} = require("./src/config/utils");
 const {logger} = require("./src/config/utils");
+const testRouter = require("./src/routes/test");
 const app = express();
 
 const STRING_CONNECTION = `mongodb+srv://${config.DB_USER}:${config.DB_PASS}@codercluster.zrkv6ij.mongodb.net/${config.DB_NAME}?retryWrites=true&w=majority`;
@@ -57,7 +58,6 @@ app.use(
 app.use(passport.initialize());
 app.use(passport.session());
 app.use("/api/sessions", sessionRouter);
-app.use(errorHandler);
 app.use(addLogger);
 
 //Global Variables
@@ -93,6 +93,8 @@ app.get("/logout", (req,res) =>{
     req.session.destroy();
     res.redirect("/login");
 });
+app.use("/test", testRouter);
+app.use(errorHandler);
 
 //WebChat
 const messages = [];

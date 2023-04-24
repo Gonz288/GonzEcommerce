@@ -7,7 +7,7 @@ routerLogin.get("/", (req, res) =>{
     res.render("login", {title: "Login"});
 });
 
-routerLogin.post("/", passport.authenticate("login", {failureRedirect:"/login"}),async (req,res) =>{
+routerLogin.post("/", passport.authenticate("login", {failureRedirect:"/login/failLogin"}),async (req,res) =>{
     if(!req.user) return res.status(400).send({status:"error", error:"invalid credentials"});
     req.session.user = {
         firstname: req.user.firstname,
@@ -18,5 +18,10 @@ routerLogin.post("/", passport.authenticate("login", {failureRedirect:"/login"})
     }
     res.status(200).redirect("api/products");
 });
+
+routerLogin.get("/failLogin", async(req,res)=>{
+    res.send({error: "Failed"});
+});
+
 
 module.exports = routerLogin;
