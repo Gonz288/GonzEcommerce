@@ -1,6 +1,6 @@
 <nav class="navbar bg-dark navbar-dark navbar-expand-lg">
     <div class="container-fluid">
-        <a href="/api/products" class="navbar-brand">Productos</a>
+        <a href="/api/products" class="navbar-brand">Products</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
@@ -14,12 +14,33 @@
                         <li><a class="dropdown-item" href="#">Profile</a></li>
                         <li><a class="dropdown-item" href="/logout">Logout</a></li>
                     </ul>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-expanded="false"> Categories </a>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="/api/products/motherboards"><i class="bi bi-motherboard"></i> Motherboards</a></li>
+                        <li><a class="dropdown-item" href="/api/products/processors"><i class="bi bi-cpu"></i> Processors</a></li>
+                        <li><a class="dropdown-item" href="/api/products/storage"><i class="bi bi-hdd"></i> Storage</a></li>
+                        <li><a class="dropdown-item" href="/api/products/memory"><i class="bi bi-memory"></i> Ram Memory</a></li>
+                        <li class="dropend">
+                            <a class="nav-link dropdown-toggle text-black mx-1" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                Peripherals
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="/api/products/mouses"><i class="bi bi-mouse3"></i> Mouses</a></li>
+                                <li><a class="dropdown-item" href="/api/products/keyboards"><i class="bi bi-keyboard"></i> Keyboards</a></li>
+                                <li><a class="dropdown-item" href="/api/products/headphones"><i class="bi bi-headset"></i> Headphones</a></li>
+                                <li><a class="dropdown-item" href="/api/products/microphones"><i class="bi bi-mic"></i> Microphones</a></li>
+                                <li><a class="dropdown-item" href="/api/products/webcams"><i class="bi bi-webcam"></i> Webcams</a></li>
+                            </ul>
+                        </li>
+                    </ul>
                 </li>        
             </ul>
             {{#if user.admin}}
-                <button type="button" class="btn btn-primary mx-5" data-bs-toggle="modal" data-bs-target="#modalCreateProduct">Create Product</button>
+                <button type="button" class="btn btn-primary mx-5" data-bs-toggle="modal" data-bs-target="#modalCreateProductAdmin">Create Product</button>
                 <!-- Modal Create Product-->
-                <div class="modal fade" id="modalCreateProduct" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal fade" id="modalCreateProductAdmin" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                     <div class="modal-dialog">
                         <div class="modal-content">
                             <div class="modal-header">
@@ -72,42 +93,112 @@
                         </div>
                     </div>
                 </div>
-            {{else}}
-            <button class="btn btn-primary mx-5"><a href="/api/carts/642de9c5a9771dcd669f827c" class="nav-link">My Cart</a></button>
+            {{else}} 
+                {{#if user.premium}}
+                    <button type="button" class="btn btn-primary mx-5" data-bs-toggle="modal" data-bs-target="#modalCreateProductPremium">Create Product</button>
+                    <!-- Modal Create Product-->
+                    <div class="modal fade" id="modalCreateProductPremium" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h1 class="modal-title fs-5" id="exampleModalLabel">Create Product</h1>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <form action="" method="post">
+                                        <div class="mb-3">
+                                            <label for="exampleInputEmail1" class="form-label">Title</label>
+                                            <input type="text" class="form-control" name="title" required>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="exampleInputEmail1" class="form-label">Description</label>
+                                            <input type="text" class="form-control" name="description" required>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="exampleInputEmail1" class="form-label">Code</label>
+                                            <input type="text" class="form-control" name="code" required>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="exampleInputEmail1" class="form-label">Price</label>
+                                            <input type="number" class="form-control" name="price" required>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="status">Status:</label>
+                                            <select name="status" id="status">
+                                                <option value="true" selected>True</option>
+                                                <option value="false">False</option>
+                                            </select>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="exampleInputEmail1" class="form-label">Stock</label>
+                                            <input type="number" class="form-control" name="stock" required>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="exampleInputEmail1" class="form-label">Thumbnail</label>
+                                            <input type="file" class="form-control" name="thumbnail" required>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="exampleInputEmail1" class="form-label">Category</label>
+                                            <input type="text" class="form-control" name="category" required>
+                                        </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                    <button id="btnSend" type="submit" class="btn btn-primary">Create</button>
+                                </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                {{/if}}
             {{/if}}
+            <button class="btn btn-primary mx-5"><a href="/api/carts/642de9c5a9771dcd669f827c" class="nav-link">My Cart</a></button>
             <span class="navbar-text">
-                Rol: {{#if user.admin}} Admin {{else}} Usuario {{/if}}
+                Rol: 
+            {{#if user.admin}} 
+                Admin 
+                {{else}}
+                    {{#if user.premium}} 
+                        Premium 
+                    {{else}} 
+                        User 
+                {{/if}}
+            {{/if}}
             </span>
         </div>
     </div>
 </nav>
 
 <div class="container-fluid mt-5">
-    <h1 class="text-center mb-5">Bienvenido {{user.firstname}}</h1>
-    <h2>List of Products: </h2>
     <div class="row">
         {{#each object.payload}}
             <div class="col">
-                <p><b>Title:</b> {{this.title}}</p>
-                <p><b>Description:</b> {{this.description}}</p>
-                <p><b>Code:</b> {{this.code}}</p>
-                <p><b>Price:</b> {{this.price}}</p>
-                <p><b>Thumbnail: </b>{{this.thumbnail}}</p>
-                <p><b>Status: </b>{{this.status}}</p>
-                <p><b>Stock:</b> {{this.stock}}</p>
-                <p><b>Category:</b> {{this.category}}</p>
-                {{#if ../user.admin}}
-                    <form action="/api/products/delete/{{this.id}}?_method=DELETE" method="POST">
-                        <input type="hidden" name="_method" value="DELETE">
-                        <button type="submit" class="btn btn-danger">Delete Product</button>
-                    </form>
-                    <button type="button" class="btn btn-primary mt-3" data-bs-toggle="modal" data-bs-target="#modalPutProductId{{this.id}}">Edit Product</button>
-                {{else}}    
-                <form action="/api/carts/642de9c5a9771dcd669f827c" method="post" class="mt-3">
-                    <input type="hidden" name="product" value="{{this._id}}">
-                    <button class="btn btn-success" type="submit"><a class="nav-link">Add To Cart</a></button>
-                </form>
-                {{/if}}
+                <div class="card" style="width: 18rem; height:35rem;">
+                    <img height="200px" src="{{this.thumbnail}}" alt="{{this.title}}">
+                    <div class="card-body">
+                        <h5 class="card-title">{{this.description}}</h5>
+                        <p class="text-success fs-4">${{this.price}}</p>
+                    </div>
+                    {{#if ../user.admin}}
+                        <form action="/api/products/delete/{{this.id}}?_method=DELETE" method="POST">
+                            <input type="hidden" name="_method" value="DELETE">
+                            <button type="submit" class="btn btn-danger">Delete Product</button>
+                        </form>
+                        <button type="button" class="btn btn-primary mt-3" data-bs-toggle="modal" data-bs-target="#modalPutProductId{{this.id}}">Edit Product</button>
+                    {{else}}
+                        {{#if ../user.premium}}
+                            <form action="/api/products/delete/{{this.id}}?_method=DELETE" method="POST">
+                                <input type="hidden" name="_method" value="DELETE">
+                                <button type="submit" class="btn btn-danger">Delete Product</button>
+                            </form>
+                            <button type="button" class="btn btn-primary mt-3" data-bs-toggle="modal" data-bs-target="#modalPutProductId{{this.id}}">Edit Product</button>
+                        {{/if}}    
+                        <form action="/api/carts/642de9c5a9771dcd669f827c" method="post" class="mt-3">
+                            <input type="hidden" name="product" value="{{this._id}}">
+                            <button class="btn btn-success" type="submit"><a class="nav-link">Add To Cart</a></button>
+                        </form>
+                    {{/if}}
+                </div>
             </div>
             <!-- Modal -->
             <div class="modal fade" id="modalPutProductId{{this.id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">

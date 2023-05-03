@@ -14,7 +14,8 @@ routerLogin.post("/", passport.authenticate("login", {failureRedirect:"/login/fa
         lastname: req.user.lastname,
         age: req.user.age,
         admin: req.user.admin,
-        email: req.user.email
+        email: req.user.email,
+        premium: req.user.premium
     }
     res.status(200).redirect("api/products");
 });
@@ -22,6 +23,5 @@ routerLogin.post("/", passport.authenticate("login", {failureRedirect:"/login/fa
 routerLogin.get("/failLogin", async(req,res)=>{
     res.send({error: "Failed"});
 });
-
 
 module.exports = routerLogin;

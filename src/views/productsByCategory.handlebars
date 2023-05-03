@@ -1,0 +1,179 @@
+<nav class="navbar bg-dark navbar-dark navbar-expand-lg">
+    <div class="container-fluid">
+        <a href="/api/products" class="navbar-brand">Productos</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav me-auto">
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        {{user.firstname}}
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="#">Profile</a></li>
+                        <li><a class="dropdown-item" href="/logout">Logout</a></li>
+                    </ul>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-expanded="false"> Categorias </a>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="/api/products/motherboards"><i class="bi bi-motherboard"></i> Motherboards</a></li>
+                        <li><a class="dropdown-item" href="/api/products/processors"><i class="bi bi-cpu"></i> Processors</a></li>
+                        <li><a class="dropdown-item" href="/api/products/storage"><i class="bi bi-hdd"></i> Storage</a></li>
+                        <li><a class="dropdown-item" href="/api/products/memory"><i class="bi bi-memory"></i> Ram Memory</a></li>
+                        <li class="dropend">
+                            <a class="nav-link dropdown-toggle text-black mx-1" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                Peripherals
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="/api/products/mouses"><i class="bi bi-mouse3"></i> Mouses</a></li>
+                                <li><a class="dropdown-item" href="/api/products/keyboards"><i class="bi bi-keyboard"></i> Keyboards</a></li>
+                                <li><a class="dropdown-item" href="/api/products/headphones"><i class="bi bi-headset"></i> Headphones</a></li>
+                                <li><a class="dropdown-item" href="/api/products/microphones"><i class="bi bi-mic"></i> Microphones</a></li>
+                                <li><a class="dropdown-item" href="/api/products/webcams"><i class="bi bi-webcam"></i> Webcams</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </li>        
+            </ul>
+            <button class="btn btn-primary mx-5"><a href="/api/carts/642de9c5a9771dcd669f827c" class="nav-link">My Cart</a></button>
+            <span class="navbar-text">
+                Rol: 
+            {{#if user.admin}} 
+                Admin 
+                {{else}}
+                    {{#if user.premium}} 
+                        Premium 
+                    {{else}} 
+                        Usuario 
+                {{/if}}
+            {{/if}}
+            </span>
+        </div>
+    </div>
+</nav>
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-2">
+            <ul class="list-group">
+                <li class="list-group-item">An item</li>
+                <li class="list-group-item">A second item</li>
+                <li class="list-group-item">A third item</li>
+                <li class="list-group-item">A fourth item</li>
+                <li class="list-group-item">And a fifth one</li>
+                <li class="list-group-item">A third item</li>
+                <li class="list-group-item">A fourth item</li>
+                <li class="list-group-item">And a fifth one</li>
+            </ul>
+            <ul class="list-group mt-4">
+                <li class="list-group-item">An item</li>
+                <li class="list-group-item">A second item</li>
+                <li class="list-group-item">A third item</li>
+                <li class="list-group-item">A fourth item</li>
+                <li class="list-group-item">And a fifth one</li>
+                <li class="list-group-item">A third item</li>
+                <li class="list-group-item">A fourth item</li>
+                <li class="list-group-item">And a fifth one</li>
+            </ul>
+        </div>
+        <div class="col-10">
+            <div class="row">
+                {{#each object.payload}}
+                    <div class="col">
+                        <div class="card" style="width: 18rem; height:29rem">
+                            <img height="200px" class="card-img-top" src="{{this.thumbnail}}" alt="{{this.title}}">
+                            <div class="card-body">
+                                <h5 class="card-title text-center">{{this.description}}</h5>
+                                <p class="text-success fs-4">${{this.price}}</p>
+                            </div>
+                            {{#if ../user.admin}}
+                                <form action="/api/products/delete/{{this.id}}?_method=DELETE" method="POST">
+                                    <input type="hidden" name="_method" value="DELETE">
+                                    <button type="submit" class="btn btn-danger">Delete Product</button>
+                                </form>
+                                <button type="button" class="btn btn-primary mt-3" data-bs-toggle="modal" data-bs-target="#modalPutProductId{{this.id}}">Edit Product</button>
+                            {{else}}    
+                            <form action="/api/carts/642de9c5a9771dcd669f827c" method="post" class="mt-3">
+                                <input type="hidden" name="product" value="{{this._id}}">
+                                <button class="btn btn-success" type="submit"><a class="nav-link">Add To Cart</a></button>
+                            </form>
+                            {{/if}}
+                        </div>
+                    </div>
+                    <!-- Modal -->
+                    <div class="modal fade" id="modalPutProductId{{this.id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h1 class="modal-title fs-5" id="exampleModalLabel">Edit Product</h1>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <form action="products/put/{{this.id}}?_method=PUT" method="POST">
+                                        <input type="hidden" name="_method" value="PUT">
+                                        <div class="mb-3">
+                                            <label for="exampleInputEmail1" class="form-label">Title</label>
+                                            <input type="text" class="form-control" name="title" value="{{this.title}}" required>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="exampleInputEmail1" class="form-label">Description</label>
+                                            <input type="text" class="form-control" name="description" value="{{this.description}}" required>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="exampleInputEmail1" class="form-label">Code</label>
+                                            <input type="text" class="form-control" name="code" value="{{this.code}}" required>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="exampleInputEmail1" class="form-label">Price</label>
+                                            <input type="number" class="form-control" name="price" value="{{this.price}}" required>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="status">Status:</label>
+                                            <select name="status" id="status">
+                                                <option value="true" selected>True</option>
+                                                <option value="false">False</option>
+                                            </select>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="exampleInputEmail1" class="form-label">Stock</label>
+                                            <input type="number" class="form-control" name="stock" value="{{this.stock}}" required>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="exampleInputEmail1" class="form-label">Thumbnail</label>
+                                            <input type="file" class="form-control" name="thumbnail" value="{{this.thumbnail}}" required>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="exampleInputEmail1" class="form-label">Category</label>
+                                            <input type="text" class="form-control" name="category" value="{{this.category}}" required>
+                                        </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                    <button type="submit" class="btn btn-primary">Update</button>
+                                </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                {{/each}}
+            </div>
+        </div>
+    </div>
+
+    <div class="row mt-5">
+        <div class="col text-center">
+            {{#if object.hasPrevPage}}
+                <button type="button" class="btn btn-secondary"><a class="nav-link" href="{{object.prevLink}}">Previous Page</a></button>
+            {{else}}
+                <button type="button" class="btn btn-secondary" disabled>Previous Page</button>
+            {{/if}}
+
+            {{#if object.hasNextPage}}
+                <button type="button" class="btn btn-primary"><a class="nav-link" href="{{object.nextLink}}">Next Page</a></button>
+            {{else}}
+                <button type="button" class="btn btn-primary" disabled>Next Page</button>
+            {{/if}}
+        </div>
+    </div>
+</div>

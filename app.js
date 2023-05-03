@@ -1,6 +1,5 @@
 const express = require("express");
 const config = require("./src/config/config");
-const mongoose = require("mongoose");
 const productsRouter = require("./src/routes/productsRouter");
 const cartsRouter = require("./src/routes/cartsRouter");
 const handlebars = require("express-handlebars");
@@ -24,6 +23,8 @@ const errorHandler = require("./src/middlewares/errors/index");
 const {addLogger} = require("./src/config/utils");
 const {logger} = require("./src/config/utils");
 const testRouter = require("./src/routes/test");
+const resetPasswordRouter = require("./src/routes/resetPassword");
+const usersRouter = require("./src/routes/usersRouter");
 const app = express();
 
 const STRING_CONNECTION = `mongodb+srv://${config.DB_USER}:${config.DB_PASS}@codercluster.zrkv6ij.mongodb.net/${config.DB_NAME}?retryWrites=true&w=majority`;
@@ -51,7 +52,7 @@ app.use(
             mongoOptions: {
                 useUnifiedTopology: true,
             },
-            ttl: 15,
+            ttl: 3600,
         }),
     })
 );
@@ -89,11 +90,13 @@ app.use("/chat", chatRouter);
 app.use("/login", loginRouter);
 app.use("/ticket", ticketRouter);
 app.use("/signup", signupRouter);
+app.use("/recoverPassword", resetPasswordRouter);
 app.get("/logout", (req,res) =>{
     req.session.destroy();
     res.redirect("/login");
 });
 app.use("/test", testRouter);
+app.use("/api/users",usersRouter);
 app.use(errorHandler);
 
 //WebChat

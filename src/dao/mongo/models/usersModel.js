@@ -7,7 +7,8 @@ const usersSchema = new mongoose.Schema({
     lastname: {type: String},
     age: {type: Number},
     email: {type: String},
-    admin: {type: Boolean},
+    premium: {type: Boolean, default: false},
+    admin: {type: Boolean, default: false},
     cart: {type: String},
     password: {type: String}
 }, {versionKey: false});

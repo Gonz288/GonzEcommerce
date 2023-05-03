@@ -10,6 +10,24 @@ class ProductManager {
         }
     }
 
+    async getById(id){
+        try{
+            const result = await productModel.findById(id);
+            return result;
+        }catch(err){
+            throw err;
+        }
+    }
+
+    async getByCategory(filterPage, options){
+        try{
+            const paginate = await productModel.paginate(filterPage, options);
+            return paginate;
+        }catch(err){
+            throw err;
+        }
+    }
+
     async create(product) {
         try {
             const newProduct = new productModel(product);

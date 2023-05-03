@@ -8,6 +8,11 @@ class ProductsRepository{
         return result;
     }
 
+    getOne = async(id) =>{
+        let result = await this.dao.getById(id);
+        return result;
+    }
+
     create = async (product) =>{
         let result = await this.dao.create(product);
         return result;

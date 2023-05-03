@@ -2,6 +2,10 @@ const {Carts} = require("../dao/factory");
 const {CartsRepository} = require("../repositories/carts.repository");
 const cartsService = new CartsRepository(new Carts());
 
+const {Products} = require("../dao/factory");
+const {ProductsRepository} = require("../repositories/products.repository");
+const productsService = new ProductsRepository(new Products());
+
 const getAllCarts = async (req, res) =>{
     try {
         const cart = await cartsService.getCarts();
@@ -54,6 +58,21 @@ const deleteProductByCart = async (req, res) =>{
 const addProductsToCart = async (req,res) =>{
     if(req.session.user.admin){
         res.status(401).send("No tienes Acceso");
+    }else if(req.session.user.premium){
+        const { cid } = req.params;
+        const productObj = req.body;
+
+        const result = await productsService.getOne(productObj.product)
+        if(result.owner === req.session.user.email){
+            res.status(401).send("No puedes agregar tus productos al carrito");
+        }else{
+            try{
+                const response = await cartsService.addProduct(cid, productObj.product);
+                res.status(200).redirect("/api/products");
+            }catch(error){
+                throw error;
+            }
+        }
     }else{
         const { cid } = req.params;
         const productObj = req.body;

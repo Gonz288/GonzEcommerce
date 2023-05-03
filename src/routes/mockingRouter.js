@@ -1,5 +1,5 @@
 const express = require("express");
-const generateProducts = require("../config/utils");
+const {generateProducts} = require("../config/utils");
 const mockingRouter = express.Router();
 mockingRouter.get("/", async (req, res) => {
     let products = [];

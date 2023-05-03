@@ -12,6 +12,7 @@ const productSchema = new mongoose.Schema({
     stock: Number,
     category: String,
     status: Boolean,
+    owner: String
 });
 productSchema.plugin(mongoosePaginate);
 const productModel = mongoose.model(productCollection, productSchema);
