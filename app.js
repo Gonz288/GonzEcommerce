@@ -25,11 +25,26 @@ const {logger} = require("./src/config/utils");
 const testRouter = require("./src/routes/test");
 const resetPasswordRouter = require("./src/routes/resetPassword");
 const usersRouter = require("./src/routes/usersRouter");
+const swaggerJsdoc = require("swagger-jsdoc");
+const swaggerUiExpress = require("swagger-ui-express");
 const app = express();
 
 const STRING_CONNECTION = `mongodb+srv://${config.DB_USER}:${config.DB_PASS}@codercluster.zrkv6ij.mongodb.net/${config.DB_NAME}?retryWrites=true&w=majority`;
 
 const httpServer = app.listen(config.PORT, ()=>{logger.info(`Server running on port ${config.PORT}`)});
+
+//Swagger
+const swaggerOptions = {
+    definition: {
+        openapi: '3.0.1',
+        info: {
+            title: "Documentando Con Swagger",
+            description: "Documentacion de los Carritos y Productos",
+        },
+    },
+    apis: [`${__dirname}/src/docs/**/*.yaml`],
+};
+const specs = swaggerJsdoc(swaggerOptions);
 
 //Handlebars
 app.engine("handlebars", handlebars.engine({defaultLayout: 'main',handlebars: allowInsecurePrototypeAccess(Handlebars)}));
@@ -98,6 +113,7 @@ app.get("/logout", (req,res) =>{
 app.use("/test", testRouter);
 app.use("/api/users",usersRouter);
 app.use(errorHandler);
+app.use('/apidocs', swaggerUiExpress.serve, swaggerUiExpress.setup(specs));
 
 //WebChat
 const messages = [];

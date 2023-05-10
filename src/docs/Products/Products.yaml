@@ -1,0 +1,147 @@
+paths:
+  /api/products/:
+    get:
+      summary: Obtiene todos los productos
+      tags:
+        - Products
+      responses:
+        "200":
+          description: Los productos fueron obtenidos satisfactoriamente de la base de datos
+        "500":
+          description: Error interno de servidor, usualmente generado por una query defectuosa o una falla de la conexion con la base de datos
+  /api/products/{category}:
+    get:
+      summary: Obtiene los productos de la categoria correspondiente
+      tags:
+        - Products
+      parameters:
+        - in: path
+          name: category
+          required: true
+          description: categoria de los producto que desea solicitar
+          schema: 
+            $type: String
+      responses:
+        "200":
+          description: Los productos fueron obtenidos satisfactoriamente de la base de datos
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Product"
+        "500":
+          description: Error interno de servidor, usualmente generado por una query defectuosa o una falla de la conexion con la base de datos
+        "404":
+          description: No tienes Acceso, debes logearte primero
+  /api/products/{pid}:
+    put:
+      summary: Actualizar producto apartir de su id
+      tags:
+        - Products
+      parameters:
+      - name: uid
+        in: path 
+        required: true
+        description: id del producto que desea actualizar
+        schema:
+          $type: String
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/requestBodies/updateProduct"
+components:
+  schemas:
+    Product:
+      type: object
+      properties:
+        _id:
+          type: ObjectId
+          description: Id autogenerado de mongo
+          example: ObjectId("64519a8f76a8dc814b885c66")
+        title:
+          type: String
+          description: Titulo del Producto
+          example: CPU AMD
+        description:
+          type: String
+          description: Descripcion del Producto
+          example: AMD RYZEN 3 4100
+        code:
+          type: String
+          description: Codigo del producto generado por el admin/user
+          example: 453G4S
+        price:
+          type: Number
+          description: Precio del producto
+          example: 41999
+        thumbnail:
+          type: String
+          description: URL de la imagen del producto
+          example: /img/processors/ryzen3.jpg
+        stock:
+          type: Number
+          description: Cantidad del producto en stock
+          example: 30
+        category:
+          type: String
+          description: Categoria del producto
+          example: processors
+        status:
+          type: Boolean
+          description: Estado del producto en venta
+          example: true
+        owner:
+          type: String
+          description: Email sobre quien creo el producto 
+          example: admin
+      example:
+        _id: ObjectId("64519a8f76a8dc814b885c66")
+        title: CPU AMD
+        description: AMD RYZEN 3 4100
+        code: 453G4S
+        price: 41999
+        thumbnail: /img/processors/ryzen3.jpg
+        stock: 30
+        category: processors
+        status: true
+        owner: admin
+  requestBodies:
+    updateProduct:
+      type: object
+      properties:
+        title:
+          type: String
+          description: Titulo del producto
+        description:
+          type: String
+          description: Descripcion del producto
+        code:
+          type: String
+          description: Codigo del producto generado por el usuario
+        price:
+          type: Number
+          description: Precio del producto
+        thumbnail:
+          type: String
+          description: URL de la imagen del producto
+        stock:
+          type: Number
+          decription: Cantidad en stock del producto
+        category:
+          type: String
+          decription: Categoria del producto
+        owner:
+          type: String
+          description: Quien creo el producto
+      example:
+        _id: ObjectId("64519a8f76a8dc814b885c66")
+        title: CPU AMD
+        description: AMD RYZEN 3 4100
+        code: 453G4S
+        price: 41999
+        thumbnail: /img/processors/ryzen3.jpg
+        stock: 30
+        category: processors
+        status: true
+        owner: admin
