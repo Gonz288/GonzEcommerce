@@ -11,9 +11,9 @@ routersignup.post("/", passport.authenticate("register", {failureRedirect: "/sig
     const {email, password, confirm_password, firstname, lastname, age} = req.body;
     let {admin} = req.body;
     if (!email || !firstname || !lastname || !age || !password || !confirm_password && password !== confirm_password) {
-        res.redirect("/signup");
+        res.status(400).redirect("/signup");
     }
-    res.redirect("/login");
+    res.status(201).render("login", {success: "Te has registrado exitosamente."});
 });
 
 routersignup.get("/failregister", async(req,res)=>{

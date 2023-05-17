@@ -59,6 +59,7 @@ app.use(methodOverride("_method"));
 initializePassport();
 app.use(
     session({
+        key: "coderCookie",
         secret: "coderhouse",
         resave: true,
         saveUninitialized: true,
@@ -67,7 +68,7 @@ app.use(
             mongoOptions: {
                 useUnifiedTopology: true,
             },
-            ttl: 3600,
+            ttl: 15,
         }),
     })
 );

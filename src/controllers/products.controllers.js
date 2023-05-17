@@ -3,35 +3,34 @@ const {ProductsRepository} = require("../repositories/products.repository");
 const productsService = new ProductsRepository(new Products());
 
 const getAllProducts = async (req, res) => {
-    if(req.session.user){
-        const limit = req.query.limit || 5;
-        let optionsUrl = `?limit=${limit}`;
-        let page = parseInt(req.query.page) || 1;
-        if(req.query.sort){
-        if(!optionsUrl.includes("sort")){
-            optionsUrl = optionsUrl + `&sort=${req.query.sort}`;
-        }
-        }
+    const limit = req.query.limit || 5;
+    let optionsUrl = `?limit=${limit}`;
+    let page = parseInt(req.query.page) || 1;
+    if(req.query.sort){
+    if(!optionsUrl.includes("sort")){
+        optionsUrl = optionsUrl + `&sort=${req.query.sort}`;
+    }
+    }
 
-        let filterPage;
-        if(req.query.category){
-            filterPage = {category: req.query.category}
-            if(!optionsUrl.includes("category")){
-                optionsUrl = optionsUrl + `&category=${req.query.category}`
-            }
-        }else if(req.query.status){
-            filterPage = {status: req.query.status}
-            if(!optionsUrl.includes("status")){
-                optionsUrl = optionsUrl + `&status=${req.query.status}`
-            }
-        }else{
-            filterPage = {}
+    let filterPage;
+    if(req.query.category){
+        filterPage = {category: req.query.category}
+        if(!optionsUrl.includes("category")){
+            optionsUrl = optionsUrl + `&category=${req.query.category}`
         }
+    }else if(req.query.status){
+        filterPage = {status: req.query.status}
+        if(!optionsUrl.includes("status")){
+            optionsUrl = optionsUrl + `&status=${req.query.status}`
+        }
+    }else{
+        filterPage = {}
+    }
 
-        const options = {page: page, limit: limit, sort: req.query.sort ? {price: req.query.sort} : {}};
-        try {
-            let productsPage = await productsService.get(filterPage, options)
-            const object = {
+    const options = {page: page, limit: limit, sort: req.query.sort ? {price: req.query.sort} : {}};
+    try {
+        let productsPage = await productsService.get(filterPage, options)
+        const object = {
             status: "success",
             payload: productsPage.docs,
             totalPages: productsPage.totalPages,
@@ -43,106 +42,99 @@ const getAllProducts = async (req, res) => {
             nextLink: productsPage.hasNextPage != false ? `${optionsUrl}&page=${page + 1}` : null,
         }
         res.status(200).render("realTimeProducts", {object});
-        } catch (err) {
+    } catch (err) {
         res.status(500).send(err.message);
-        }
-    }else{
-        res.status(404).redirect("/login");
     }
 };
 
 const getProductsByCategory = async (req, res) => {
-    if(req.session.user){
-        const limit = req.query.limit || 5;
-        let optionsUrl = `?limit=${limit}`;
-        let page = parseInt(req.query.page) || 1;
-        if(req.query.sort){
-        if(!optionsUrl.includes("sort")){
-            optionsUrl = optionsUrl + `&sort=${req.query.sort}`;
+    const limit = req.query.limit || 5;
+    let optionsUrl = `?limit=${limit}`;
+    let page = parseInt(req.query.page) || 1;
+    if(req.query.sort){
+    if(!optionsUrl.includes("sort")){
+        optionsUrl = optionsUrl + `&sort=${req.query.sort}`;
+    }
+    }
+
+    /*let filterPage;
+    if(req.query.category){
+        filterPage = {category: req.query.category}
+        if(!optionsUrl.includes("category")){
+            optionsUrl = optionsUrl + `&category=${req.query.category}`
         }
-        }
-
-        /*let filterPage;
-        if(req.query.category){
-            filterPage = {category: req.query.category}
-            if(!optionsUrl.includes("category")){
-                optionsUrl = optionsUrl + `&category=${req.query.category}`
-            }
-        }else if(req.query.status){
-            filterPage = {status: req.query.status}
-            if(!optionsUrl.includes("status")){
-                optionsUrl = optionsUrl + `&status=${req.query.status}`
-            }
-        }else{
-            filterPage = {}
-        }*/
-
-        const options = {page: page, limit: limit, sort: req.query.sort ? {price: req.query.sort} : {}};
-
-        const {category} = req.params;
-        let filterPage = {category: category};
-
-        try {
-            let productsPage = await productsService.get(filterPage, options)
-            const object = {
-                status: "success",
-                payload: productsPage.docs,
-                totalPages: productsPage.totalPages,
-                prevPage: productsPage.prevPage,
-                nextPage: productsPage.nextPage,
-                hasPrevPage: productsPage.hasPrevPage,
-                hasNextPage: productsPage.hasNextPage,
-                prevLink: productsPage.hasPrevPage != false ? `${optionsUrl}&page=${page - 1}` : null,
-                nextLink: productsPage.hasNextPage != false ? `${optionsUrl}&page=${page + 1}` : null,
-            }
-            res.status(200).render("productsByCategory", {object});
-        } catch (err) {
-            res.status(500).send(err.message);
+    }else if(req.query.status){
+        filterPage = {status: req.query.status}
+        if(!optionsUrl.includes("status")){
+            optionsUrl = optionsUrl + `&status=${req.query.status}`
         }
     }else{
-        res.status(404).redirect("/login");
+        filterPage = {}
+    }*/
+
+    const options = {page: page, limit: limit, sort: req.query.sort ? {price: req.query.sort} : {}};
+
+    const {category} = req.params;
+    let filterPage = {category: category};
+
+    try {
+        let productsPage = await productsService.get(filterPage, options)
+        const object = {
+            status: "success",
+            payload: productsPage.docs,
+            totalPages: productsPage.totalPages,
+            prevPage: productsPage.prevPage,
+            nextPage: productsPage.nextPage,
+            hasPrevPage: productsPage.hasPrevPage,
+            hasNextPage: productsPage.hasNextPage,
+            prevLink: productsPage.hasPrevPage != false ? `${optionsUrl}&page=${page - 1}` : null,
+            nextLink: productsPage.hasNextPage != false ? `${optionsUrl}&page=${page + 1}` : null,
+        }
+        res.status(200).render("productsByCategory", {object});
+    } catch (err) {
+        res.status(500).send(err.message);
     }
 };
 
 const createProduct = async (req, res) =>{
-        if(req.session.user.admin | req.session.user.premium){
-            const {
-                title,
-                description,
-                code,
-                price,
-                thumbnail,
-                stock,
-                category,
-                status,
-            } = req.body;
-            let urlThumbnail = `/img/${category}/${thumbnail}`;
-            if (
-                !title ||
-                !description ||
-                !code ||
-                !price ||
-                !thumbnail ||
-                !stock ||
-                !category ||
-                !status
-                ) {
-                res.status(400).redirect("/api/products");
-                return;
-            }
-            
-            try {
-                let owner;
-                req.session.user.premium ? owner = req.session.user.email : owner = "admin";
-                const myProduct = {title,description,code,price,thumbnail:urlThumbnail,stock,category,status,owner};
-                const response = await productsService.create(myProduct);
-                res.status(200).redirect("/api/products");
-            } catch (err) {
-                res.status(500).redirect("/api/products");
-            }
-        }else{
-            res.status(401).send("No tienes Acceso.")
+    if(req.session.user.admin | req.session.user.premium){
+        const {
+            title,
+            description,
+            code,
+            price,
+            thumbnail,
+            stock,
+            category,
+            status,
+        } = req.body;
+        let urlThumbnail = `/img/${category}/${thumbnail}`;
+        if (
+            !title ||
+            !description ||
+            !code ||
+            !price ||
+            !thumbnail ||
+            !stock ||
+            !category ||
+            !status
+            ) {
+            res.status(400).redirect("/api/products");
+            return;
         }
+        
+        try {
+            let owner;
+            //req.session.user.premium ? owner = req.session.user.email : owner = "admin";
+            const myProduct = {title,description,code,price,thumbnail:urlThumbnail,stock,category,status,owner:"admin"};
+            const response = await productsService.create(myProduct);
+            res.status(200).send(response);
+        } catch (error) {
+            res.status(500).redirect("/api/products");
+        }
+    }else{
+        res.status(401).send("No tienes Acceso.")
+    }
 };
 
 const deleteProduct = async (req,res) =>{

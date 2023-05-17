@@ -8,5 +8,8 @@ sessionRouter.get("/githubcallback", passport.authenticate("github", {failureRed
     req.session.user = req.user;
     res.redirect("/api/products");
 });
+sessionRouter.get("/current", async(req,res)=>{
+    res.send(req.session);
+});
 
 module.exports = sessionRouter;
