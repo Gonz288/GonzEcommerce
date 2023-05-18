@@ -3,7 +3,7 @@ const {ProductsRepository} = require("../repositories/products.repository");
 const productsService = new ProductsRepository(new Products());
 
 const getAllProducts = async (req, res) => {
-    const limit = req.query.limit || 5;
+    const limit = req.query.limit || 8;
     let optionsUrl = `?limit=${limit}`;
     let page = parseInt(req.query.page) || 1;
     if(req.query.sort){
@@ -90,7 +90,7 @@ const getProductsByCategory = async (req, res) => {
             prevLink: productsPage.hasPrevPage != false ? `${optionsUrl}&page=${page - 1}` : null,
             nextLink: productsPage.hasNextPage != false ? `${optionsUrl}&page=${page + 1}` : null,
         }
-        res.status(200).render("productsByCategory", {object});
+        res.status(200).render("productsByCategory", {object: object, category: category});
     } catch (err) {
         res.status(500).send(err.message);
     }
