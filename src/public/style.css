@@ -125,23 +125,23 @@
 }
 
 /* Nav Buttons */
-.dropdown .dropdown-menu{
+.drop-li .drop-ul{
   display: none;
 }
 
-.dropdown:hover > .dropdown-menu, .dropend:hover > .dropdown-menu{
+.drop-li:hover > .drop-ul, .dropend:hover > .drop-ul{
   display: block;
   margin-top: .125em;
   margin-left: .125em;
 }
 
-.dropdown-menu .dropdown-item:hover{
+.drop-ul .dropdown-item:hover{
   background-color: #2f2f2f;
   color: rgb(2, 255, 213);
 }
 
 @media screen and (min-width: 769px){
-  .dropend:hover > .dropdown-menu{
+  .dropend:hover > .drop-ul{
     position: absolute;
     top: 0;
     left: 100%;
@@ -153,7 +153,7 @@
 .dropend:hover .nav-link{
   color: rgb(2, 255, 213)!important;
 }
-.dropend:hover > .dropdown-menu{
+.dropend:hover > .drop-ul{
   position: absolute;
   top: 0;
   left: 100%;
@@ -169,3 +169,8 @@
 .title-category:first-letter{
   text-transform: uppercase;
 }
+
+
+
+
+/*Footer */

@@ -10,12 +10,36 @@ class ProductManager {
         }
     }
 
+    async getByQuery(query){
+        try{
+            const products = await productModel.find({
+                $or: [
+                    { title: {$regex: query, $options: 'i'} },
+                    { description: { $regex: query, $options: 'i' } },
+                ]
+            });
+            console.log(products);
+            return products;
+        }catch(err){
+            throw err;
+        }
+    }
+
     async getById(id){
         try{
             const result = await productModel.findById(id);
             return result;
         }catch(err){
             throw err;
+        }
+    }
+
+    async getByCode(code){
+        try {
+            const result = await productModel.find({code:code});
+            return result;
+        } catch (error) {
+            throw error;
         }
     }
 

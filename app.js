@@ -46,12 +46,6 @@ const swaggerOptions = {
 };
 const specs = swaggerJsdoc(swaggerOptions);
 
-//Handlebars
-app.engine("handlebars", handlebars.engine({defaultLayout: 'main',handlebars: allowInsecurePrototypeAccess(Handlebars)}));
-app.set("views", __dirname + "/src/views");
-app.set("view engine", "handlebars");
-app.use(express.static(__dirname + "/src/public"));
-
 //Middlewares
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
@@ -76,6 +70,12 @@ app.use(passport.initialize());
 app.use(passport.session());
 app.use("/api/sessions", sessionRouter);
 app.use(addLogger);
+
+//Handlebars
+app.engine("handlebars", handlebars.engine({defaultLayout: 'main',partialsDir:__dirname + '/src/views/partials',handlebars: allowInsecurePrototypeAccess(Handlebars)}));
+app.set("views", __dirname + "/src/views");
+app.set("view engine", "handlebars");
+app.use(express.static(__dirname + "/src/public"));
 
 //Global Variables
 app.use((req, res, next)=>{
@@ -107,10 +107,6 @@ app.use("/login", loginRouter);
 app.use("/ticket", ticketRouter);
 app.use("/signup", signupRouter);
 app.use("/recoverPassword", resetPasswordRouter);
-app.get("/logout", (req,res) =>{
-    req.session.destroy();
-    res.redirect("/login");
-});
 app.use("/test", testRouter);
 app.use("/api/users",usersRouter);
 app.use(errorHandler);

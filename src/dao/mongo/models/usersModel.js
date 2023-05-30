@@ -9,8 +9,14 @@ const usersSchema = new mongoose.Schema({
     email: {type: String},
     premium: {type: Boolean, default: false},
     admin: {type: Boolean, default: false},
-    cart: {type: String},
-    password: {type: String}
+    cartId: {type: String},
+    password: {type: String},
+    img: {type: String},
+    documents: {
+        type:[{ name:{type: String}, reference: {type: String} }],
+        default: [],
+    },
+    last_connection:{type: Date}
 }, {versionKey: false});
 
 const usersModel = mongoose.model(usersCollection, usersSchema);

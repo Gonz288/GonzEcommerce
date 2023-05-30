@@ -24,13 +24,16 @@ const initializePassport = () =>{
                 if(user){
                     return done(null, false);
                 }
+                const newCart = new cartModel();
+                await newCart.save();
                 const newUser = {
                     firstname,
                     lastname,
                     admin,
                     email,
                     age,
-                    password: bcrypt.hashSync(password, bcrypt.genSaltSync(10))
+                    password: bcrypt.hashSync(password, bcrypt.genSaltSync(10)),
+                    cartId: newCart._id
                 }
                 let result = await usersModel.create(newUser);
                 return done(null,result);
@@ -48,6 +51,8 @@ const initializePassport = () =>{
                 return done(null,false);
             }
             if(!bcrypt.compareSync(password,user.password)) return done(null, false);
+            
+            const saveDate = await usersModel.findOneAndUpdate({email:username}, {last_connection: new Date()})
             return done(null,user);
         }catch(error){
             logger.error(`Failed Login: ${error}`)

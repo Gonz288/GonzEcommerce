@@ -18,8 +18,13 @@ const getAllCarts = async (req, res) =>{
 const getCartById = async (req, res) =>{
     const {cid} = req.params;
     try {
+        let totalPrice = 0;
         const cart = await cartsService.getOne(cid);
-        res.status(200).render("cartId", {cart});
+        for(let i = 0; i < cart.products.length; i++){
+            totalPrice = totalPrice + (cart.products[i].quantity * cart.products[i].product.price);
+        }
+
+        res.status(200).render("cartId", {cart:cart, totalPrice:totalPrice});
     } catch (err) {
         res.status(500).send(err.message);
     }

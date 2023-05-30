@@ -2,6 +2,10 @@ class ProductsRepository{
     constructor(dao){
         this.dao = dao;
     }
+    getByQuery = async (query) =>{
+        let result = await this.dao.getByQuery(query);
+        return result;
+    }
 
     get = async (filterPage, options) =>{
         let result = await this.dao.get(filterPage,options);
@@ -10,6 +14,11 @@ class ProductsRepository{
 
     getOne = async(id) =>{
         let result = await this.dao.getById(id);
+        return result;
+    }
+
+    getByCode = async(code) =>{
+        let result = await this.dao.getByCode(code);
         return result;
     }
 
@@ -23,8 +32,8 @@ class ProductsRepository{
         return result;
     }
 
-    update = async (product) =>{
-        let result = await this.dao.update(product);
+    update = async (productId, product) =>{
+        let result = await this.dao.update(productId, product);
         return result;
     }
 
