@@ -23,13 +23,13 @@ class CartsRepository{
         return result;
     }
 
-    deleteProduct = async (cartId, productId) =>{
-        let result = await this.dao.deleteProduct(cartId,productId);
+    deleteProduct = async (cid, pid) =>{
+        let result = await this.dao.deleteProduct(cid,pid);
         return result;
     }
 
-    addProduct = async (cid, product) =>{
-        let result = await this.dao.addProduct(cid,product);
+    addProduct = async (cid, productId,quantity) =>{
+        let result = await this.dao.addProduct(cid,productId,quantity);
         return result;
     }
 

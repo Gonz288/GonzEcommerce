@@ -16,17 +16,21 @@ const getAllCarts = async (req, res) =>{
 };
 
 const getCartById = async (req, res) =>{
-    const {cid} = req.params;
-    try {
-        let totalPrice = 0;
-        const cart = await cartsService.getOne(cid);
-        for(let i = 0; i < cart.products.length; i++){
-            totalPrice = totalPrice + (cart.products[i].quantity * cart.products[i].product.price);
+    if(req.session.user){
+        const {cid} = req.params;
+        try {
+            let totalPrice = 0;
+            const cart = await cartsService.getOne(cid);
+            for(let i = 0; i < cart.products.length; i++){
+                totalPrice = totalPrice + (cart.products[i].quantity * cart.products[i].product.price);
+            }
+    
+            res.status(200).render("cartId", {cart:cart, totalPrice:totalPrice});
+        } catch (err) {
+            res.status(500).send(err.message);
         }
-
-        res.status(200).render("cartId", {cart:cart, totalPrice:totalPrice});
-    } catch (err) {
-        res.status(500).send(err.message);
+    }else{
+        res.render("cartId", {});
     }
 };
 
@@ -54,40 +58,30 @@ const deleteProductByCart = async (req, res) =>{
     const { pid } = req.params;
     try{
         const response = await cartsService.deleteProduct(cid,pid);
-        res.status(200).send({message: "Producto eliminado", response});
+        res.status(200).redirect(`/api/carts/${cid}`);
     }catch(err){
         res.status(500).send(err.message);
     }
 }
 
 const addProductsToCart = async (req,res) =>{
+    const { cid } = req.params;
+    const {productId, quantity} = req.body;
+    const result = await productsService.getOne(productId);
     if(req.session.user.admin){
         res.status(401).send("No tienes Acceso");
-    }else if(req.session.user.premium){
-        const { cid } = req.params;
-        const productObj = req.body;
-
-        const result = await productsService.getOne(productObj.product)
-        if(result.owner === req.session.user.email){
-            res.status(401).send("No puedes agregar tus productos al carrito");
-        }else{
-            try{
-                const response = await cartsService.addProduct(cid, productObj.product);
-                res.status(200).redirect("/api/products");
-            }catch(error){
-                throw error;
-            }
-        }
+    }else if(req.session.user.premium && result.owner === req.session.user.email){
+        res.status(401).send("No puedes agregar tus productos al carrito");
+    }else if(quantity > result.stock){
+        res.send("No hay suficiente stock disponible de ese producto");
     }else{
-        const { cid } = req.params;
-        const productObj = req.body;
         try{
-            const response = await cartsService.addProduct(cid, productObj.product);
+            const response = await cartsService.addProduct(cid, productId, quantity);
             res.status(200).redirect("/api/products");
-        }catch (err) {
-            res.status(500).render("realTimeProducts",err.message);
+        }catch(error){
+            throw error;
         }
-    }
+    }     
 }
 
 const replaceProductsToCart = async (req, res) =>{
@@ -123,7 +117,7 @@ const finalizePurchase = async (req,res) =>{
     const user = req.session.user.email;
     try{
         const response = await cartsService.finalizePurchase(cid, user);
-        res.status(200).send(response);
+        res.redirect("/api/products");
     }catch(error){
         res.status(500).send(error.message);
     }

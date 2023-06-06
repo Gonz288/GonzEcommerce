@@ -8,6 +8,9 @@ cartsRouter.get("/", getAllCarts);
 //Obtener carrito por ID
 cartsRouter.get("/:cid", getCartById);
 
+//Obtener carrito por ID
+cartsRouter.get("/anonymus", getCartById);
+
 //Crear Carrito
 cartsRouter.post("/", createCart);
 
@@ -15,7 +18,7 @@ cartsRouter.post("/", createCart);
 cartsRouter.delete("/:cid", deleteAllProductsByCart);
 
 //Eliminar Producto del Carrito
-cartsRouter.delete("/:cid/products/:pid", deleteProductByCart);
+cartsRouter.get("/:cid/products/:pid", deleteProductByCart);
 
 //Actualizar carrito con nuevos productos
 cartsRouter.put("/:cid", replaceProductsToCart);

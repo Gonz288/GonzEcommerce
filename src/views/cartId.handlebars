@@ -1,44 +1,50 @@
-<!-- Navbar  -->
-{{> header}}
-
 <div class="container mt-5">
     <div class="table-responsive">
         <table class="table">
             <thead class="text-center justify-content-center">
-                <tr class="table"><td colSpan="6" class="fs-4 fw-bold">Your Cart</td></tr>
-                <tr class="table">
+                <tr class="table"><td colSpan="6" class="fs-4 fw-bold pcolor"> <i class="bi bi-cart3"></i> Your Cart</td></tr>
+                <tr class="table text-white">
                     <th scope="col">Thumbnail</th>
                     <th scope="col">Detail</th>
                     <th scope="col">Code</th>
                     <th scope="col">Quantity</th>
+                    <th scope="col">Actions</th>
                 </tr>
             </thead>
-                <tbody class="text-center align-middle fw-bold">
-                    {{#each cart.products}}
-                    <tr>
-                        <td><img src="{{this.product.thumbnail}}" alt="{{this.product.title}}" height="100px" width="100px"></td>
-                        <td>{{this.product.description}}</td>
-                        <td>{{this.product.code}}</td>
-                        <td>{{this.quantity}}</td>
-                    </tr>
-                    {{/each}}
-                    <tr class="table-info table-active fw-bold fs-5">
-                        <td colspan="2"></td>
-                        <td class="text-end">
-                            Total Price:
-                        </td>
-                        <td class="text-success-emphasis text-start">
-                            {{#if totalPrice}}
-                                ${{this.totalPrice}}
-                            {{/if}}
-                        </td>
-                    </tr>
+                <tbody class="text-center align-middle fw-bold text-white">
+                    {{#if cart.products}}
+                        {{#each cart.products}}
+                            <tr>
+                                <td><img src="{{this.product.thumbnail}}" alt="{{this.product.title}}" height="100px" width="100px"></td>
+                                <td>{{this.product.description}}</td>
+                                <td>{{this.product.code}}</td>
+                                <td>{{this.quantity}}</td>
+                                <td><a class="nav-link" href="/api/carts/{{../cart._id}}/products/{{this._id}}"><i class="bi bi-trash fs-5 bg-danger rounded p-1 "></i></a></td>
+                            </tr>
+                        {{/each}}
+                        <tr class="table-info table-active fw-bold fs-5">
+                            <td colspan="3"></td>
+                            <td class="text-end">
+                                Total Price:
+                            </td>
+                            <td class="text-success-emphasis text-start">
+                                {{#if totalPrice}}
+                                    ${{this.totalPrice}}
+                                {{/if}}
+                            </td>
+                        </tr>
+                    {{else}}
+                        <tr><td colspan="5" class="text-white bg-secondary">Empty</td></tr>
+                    {{/if}}
                 </tbody>
         </table>
+
         {{#if cart}}
             <div class="text-end">
-                <button class="btn btn-lg btn-success fw-bolder"><a class="nav-link" href="{{cart._id}}/purchase"><i class="bi bi-bag-check-fill"></i> Finalize Purchase</a></button>
+                <button class="btn btn-lg btn-success fw-bolder"><a class="nav-link" href="/payments/create-checkout-session/{{cart._id}}"><i class="bi bi-bag-check-fill"></i> Finalize Purchase</a></button>
             </div>
+        {{else}}
+            <p class="fs-4 fw-semibold pcolor">Log in to add products to cart</p>
         {{/if}}
     </div>
 </div>

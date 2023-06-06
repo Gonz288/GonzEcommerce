@@ -1,25 +1,37 @@
-<div class="container signIn-container">
-    <div class="card" style="max-width: 690px; padding:25px;">
+<div class="container signIn-container mt-5">
+    <div class="card border border-dark" style="max-width: 690px; padding:25px;">
         <h2 class="text-center mb-4">Sign In</h2>
+            {{#if loginMessage}}
+                <p class="text-danger fs-5 p-2 rounded error">{{loginMessage}}</p>
+            {{/if}}
         <form class="row g-0" action="/login" method="POST">
             <div class="mb-3">
-                <label for="email" class="form-label mx-1">Email</label>
-                <input type="email" name="email" class="form-control">
+                <label for="email" class="form-label mx-1 fw-semibold">Email</label>
+                <div class="input-group">
+                    <span class="input-group-text"><i class="bi bi-envelope"></i></span>
+                    <input type="email" name="email" class="form-control" placeholder="Email" required>
+                </div>
             </div>
             <div class="mb-3">
-                <label for="password" class="form-label mx-1">Password</label>
-                <input type="password" id="password" name="password" class="form-control">
+                <label for="password" class="form-label mx-1 fw-semibold">Password</label>
+                <div class="input-group">
+                    <span class="input-group-text"><i class="bi bi-key"></i></span>
+                    <input type="password" id="password" name="password" class="form-control" placeholder="Password" required>
+                </div>
             </div>
-            <div id="signUp" class="form-text mb-3">
+            <div id="signUp" class="form-text mb-3 text-black">
                 You don't have an account? <a href="signup">Create an account.</a>
             </div>
             <div class="form-text mb-3 text-end">
                 <a href="/recoverPassword/sendEmail">Forgot Password</a>
             </div>
-            <div class="form-text mb-3">
-                <a href="/api/sessions/github">Login with GitHub</a>
-            </div>
-            <button type="submit" class="btn btn-primary">Submit</button>
+            <div class="border-top border-dark"></div>
+            <i class="fw-semibold d-flex justify-content center align-items-center my-3"> Sign in with Github: 
+                <div class="form-text justify-content center align-items-center">
+                    <a href="/api/sessions/github"><button class="btn btn-secondary mx-2"><i class="bi bi-github"></i> Login with GitHub</button></a>
+                </div>
+            </i>
+            <button type="submit" class="btn fw-semibold btn-dark" style="color: rgb(0, 219, 113)">Login</button>
         </form>
     </div>
 </div>

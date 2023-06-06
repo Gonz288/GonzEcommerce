@@ -1,176 +1,123 @@
-.chat-container {
-  height: 100%;
-  width: 100%;
-  overflow: auto;
-  background-color: #f1f1f1;
-  padding: 10px;
-}
-.row-chat{
-  display: flex;
-  flex-direction:row;
-  height: 100%;
-}
-.col-chat{
+@import '/css/header.css';
+@import '/css/footer.css';
+body{
   display: flex;
   flex-direction: column;
+  min-height: 100vh;
 }
-.chat-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  height: 50px;
-  background-color: #2196f3;
-  border-radius: 5px;
-  color: white;
-  padding: 0 20px;
-}
-
-.users-header{
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 50px;
-  background-color: #2b2b2b;
-  color: #fff;
-  border-radius: 5px;
-}
-.user{
-  color: black;
-  height: 50px;
-  margin: 20px;
-  padding: 0 10px;
-  border-radius: 5px;
-  background-color: rgb(126, 251, 117);
-
-}
-.cartelConectado{
-  font-weight: bold;
-  text-align: end;
-}
-
-.chat-header h2 {
-  margin: 0;
-  font-size: 18px;
-}
-
-.chat-window {
-  display: flex;
-  flex-direction: column;
+main{
   flex: 1;
-  overflow: auto;
 }
-
-.chat-message {
-  display: flex;
-  margin: 10px 0;
+.error{
+  background-color: rgb(255, 179, 179);
 }
-
-.chat-message .message-bubble {
-  display: flex;
-  flex-direction: column;
-  padding: 10px 15px;
-  border-radius: 10px;
-  background-color: white;
+.success{
+  background-color: rgb(190, 255, 179);
 }
-.message-sender {
-  justify-content: space-between;
+.pcolor{
+  color: #01ff8d;
 }
-
-.socketid {
-  font-size: 8px;
-  color: #777;
+.pcolor-hover:hover{
+  color: #01ff8d!important;
 }
-.chat-message .message-bubble .message-sender {
-  font-size: 12px;
-  color: #777;
-  margin-bottom: 5px;
+.btn-search{
+  background-color: #01ff8d;
+  color: #0000;
 }
-
-.chat-message .message-bubble p {
-  font-size: 14px;
-  margin: 0;
-}
-
-.chat-input-container {
-  display: flex;
-  align-items: center;
-  background-color: white;
-  border-top: 1px solid #ddd;
-  height: 50px;
-  padding: 0 20px;
-}
-
-.chat-input-container input {
-  flex: 1;
-  height: 100%;
-  border: none;
-  font-size: 14px;
-  padding: 0 10px;
-}
-
-.chat-input-container button {
-  height: 100%;
-  background-color: #2196f3;
-  color: white;
-  font-size: 14px;
-  border: none;
-  cursor: pointer;
-}
-
 .signIn-container, .signUp-container{
   display: flex;
   place-items: center;
   justify-content: center;
-  height: 100vh;
+  padding: 100px 0px;
 }
-
-/* Nav Buttons */
-.drop-li .drop-ul{
-  display: none;
-}
-
-.drop-li:hover > .drop-ul, .dropend:hover > .drop-ul{
-  display: block;
-  margin-top: .125em;
-  margin-left: .125em;
-}
-
-.drop-ul .dropdown-item:hover{
-  background-color: #2f2f2f;
-  color: rgb(2, 255, 213);
-}
-
-@media screen and (min-width: 769px){
-  .dropend:hover > .drop-ul{
-    position: absolute;
-    top: 0;
-    left: 100%;
-  }
-}
-.dropend:hover{
-  background-color: #2f2f2f;
-}
-.dropend:hover .nav-link{
-  color: rgb(2, 255, 213)!important;
-}
-.dropend:hover > .drop-ul{
-  position: absolute;
-  top: 0;
-  left: 100%;
-  margin-left: .125em;
+.signIn-container .card, .signUp-container .card{
+  background-color:#eaeaea;
 }
 
 /*ProductsByCategory*/
+.list-category li{
+  background-color: #202528;
+  color: #e6e6e6;
+}
 .list-category li:hover{
-  background-color: #2f2f2f;
-  color: rgb(2, 255, 213);
+  color: #01ff8d;
 }
 
 .title-category:first-letter{
   text-transform: uppercase;
 }
 
+/*Slider*/
+swiper-container {
+  width: 100%;
+  height: 100%;
+}
+:root{
+  --swiper-theme-color:#01ff8d;
+}
 
 
+.similarProducts{
+  width: 23%;
+  text-align: center;
+  font-size: 18px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 
-/*Footer */
+.similarProducts img {
+  display: block;
+  width: 300px;
+  height: 250px;
+  padding: 25px;
+}
+@media screen and (max-width: 1400px){
+  .similarProducts{
+    width: 27%;
+  }
+}
+@media screen and (max-width: 1200px){
+  .similarProducts{
+    width: 31%;
+  }
+}
+
+/*principal page */
+
+.principal-page{
+  padding: 75px 0;
+  background-color: #202020;
+}
+
+.btn-products{
+  color: #01ff8d;
+  background: rgb(19, 19, 19);
+  border: 1px solid black;
+  font-size: 20px;
+  width: 100%;
+}
+.btn-products:hover{
+  background: black;
+  color: #01ff8d;
+}
+.card-product{
+  height: 515px;
+  background: none;
+  border: 3px solid black;
+}
+.card-product .card-footer{
+  border-top: 3px solid black;
+}
+swiper-slide{
+  background: none;
+}
+
+.buttons{
+  position: absolute;
+  top: 0;
+  right: 0;
+}
+.buttons button{
+  margin: 0 5px;
+}

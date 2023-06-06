@@ -1,187 +1,99 @@
-<nav class="navbar bg-dark navbar-dark navbar-expand-lg">
-    <div class="container-fluid">
-        <a href="/api/products" class="navbar-brand">E-Commerce</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarCollapse">
-            <ul class="navbar-nav me-auto">
-                <li class="nav-item dropdown drop-li">
-                    <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-expanded="false"> Categories </a>
-                    <ul class="dropdown-menu drop-ul">
-                        <li><a class="dropdown-item" href="/api/products/motherboards"><i class="bi bi-motherboard"></i> Motherboards</a></li>
-                        <li><a class="dropdown-item" href="/api/products/processors"><i class="bi bi-cpu"></i> Processors</a></li>
-                        <li><a class="dropdown-item" href="/api/products/storage"><i class="bi bi-hdd"></i> Storage</a></li>
-                        <li><a class="dropdown-item" href="/api/products/memory"><i class="bi bi-memory"></i> Ram Memory</a></li>
-                        <li class="dropend">
-                            <a class="nav-link dropdown-toggle text-black mx-1" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                Peripherals
-                            </a>
-                            <ul class="dropdown-menu drop-ul">
-                                <li><a class="dropdown-item" href="/api/products/mouses"><i class="bi bi-mouse3"></i> Mouses</a></li>
-                                <li><a class="dropdown-item" href="/api/products/keyboards"><i class="bi bi-keyboard"></i> Keyboards</a></li>
-                                <li><a class="dropdown-item" href="/api/products/headphones"><i class="bi bi-headset"></i> Headphones</a></li>
-                                <li><a class="dropdown-item" href="/api/products/microphones"><i class="bi bi-mic"></i> Microphones</a></li>
-                                <li><a class="dropdown-item" href="/api/products/webcams"><i class="bi bi-webcam"></i> Webcams</a></li>
-                            </ul>
-                        </li>
-                        <li><a class="dropdown-item" href="/api/products/powersupply"><i class="bi bi-power"></i> Power Supply</a></li>
-                        <li><a class="dropdown-item" href="/api/products/towers"><i class="bi bi-pc"></i> Towers</a></li>
-                        <li class="dropend">
-                            <a class="nav-link dropdown-toggle text-black mx-1" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                <i class="bi bi-gpu-card"></i> Video Cards
-                            </a>
-                            <ul class="dropdown-menu drop-ul">
-                                <li><a class="dropdown-item" href="/api/products/amd video cards"><i class="bi bi-amd"></i> AMD</a></li>
-                                <li><a class="dropdown-item" href="/api/products/nvidia video cards"><i class="bi bi-nvidia"></i> Nvidia</a></li>
-                            </ul>
-                        </li>
-                        <li><a class="dropdown-item" href="/api/products/refrigeration"><i class="bi bi-fan"></i> Refrigeration</a></li>
-                        <li><a class="dropdown-item" href="/api/products/refrigeration"><i class="bi bi-usb-symbol"></i> Connectivity</a></li>
-                    </ul>
-                </li>        
-            </ul>
-            <form class="d-flex m-auto w-50" role="search" action="/api/products/search/product" method="get">
-                <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" name="search" minlength="2" maxlength="30" required>
-                <button class="btn btn-outline-success" type="submit">Search</button>
-            </form>
-            {{#if user.admin}}
-                <button type="button" class="btn btn-primary mx-5" data-bs-toggle="modal" data-bs-target="#modalCreateProductAdmin">Create Product</button>
-                <!-- Modal Create Product-->
-                <div class="modal fade" id="modalCreateProductAdmin" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                    <div class="modal-dialog">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h1 class="modal-title fs-5" id="exampleModalLabel">Create Product</h1>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                            </div>
-                            <div class="modal-body">
-                                <form action="/api/products" method="POST" enctype="multipart/form-data">
-                                    <div class="mb-3">
-                                        <label for="exampleInputEmail1" class="form-label">Title</label>
-                                        <input type="text" class="form-control" name="title" required>
-                                    </div>
-                                    <div class="mb-3">
-                                        <label for="exampleInputEmail1" class="form-label">Description</label>
-                                        <input type="text" class="form-control" name="description" required>
-                                    </div>
-                                    <div class="mb-3">
-                                        <label for="exampleInputEmail1" class="form-label">Code</label>
-                                        <input type="text" class="form-control" name="code" required>
-                                    </div>
-                                    <div class="mb-3">
-                                        <label for="exampleInputEmail1" class="form-label">Price</label>
-                                        <input type="number" class="form-control" name="price" required>
-                                    </div>
-                                    <div class="mb-3">
-                                        <label for="status">Status:</label>
-                                        <select name="status" id="status">
-                                            <option value="true" selected>True</option>
-                                            <option value="false">False</option>
-                                        </select>
-                                    </div>
-                                    <div class="mb-3">
-                                        <label for="exampleInputEmail1" class="form-label">Stock</label>
-                                        <input type="number" class="form-control" name="stock" required>
-                                    </div>
-                                    <div class="mb-3">
-                                        <label for="exampleInputEmail1" class="form-label">Thumbnail</label>
-                                        <input type="file" class="form-control" name="thumbnail" required>
-                                    </div>
-                                    <div class="mb-3">
-                                        <label for="exampleInputEmail1" class="form-label">Category</label>
-                                        <input type="text" class="form-control" name="category" required>
-                                    </div>
-                            </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                    <button id="btnSend" type="submit" class="btn btn-primary">Create</button>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
+<div class="container-xl py-3">
+    <div class="row d-flex justify-content-center align-items-center g-3">
+        <div class="col-3">
+            <a href="/api/products" class="navbar-brand"> <img src="/img/banners/logo.png" width="200px" height="70px" alt="Gonz E-commerce"></a>
+        </div>
+        <div class="col-6">
+            <form role="search" action="/api/products/search/product" method="get">
+                <div class="input-group input-group-lg d-flex w-100 mx-auto">
+                    <span class="input-group-text"><i class="bi bi-search"></i></span>
+                    <input class="form-control" type="search" placeholder="Search" aria-label="Search" name="search" minlength="2" maxlength="30" required/>
+                    <button class="btn text-black fw-semibold btn-search" type="submit">Search</button>
                 </div>
-            {{else}} 
-                {{#if user.premium}}
-                    <button type="button" class="btn btn-primary mx-5" data-bs-toggle="modal" data-bs-target="#modalCreateProductPremium">Create Product</button>
-                    <!-- Modal Create Product-->
-                    <div class="modal fade" id="modalCreateProductPremium" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                        <div class="modal-dialog">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h1 class="modal-title fs-5" id="exampleModalLabel">Create Product</h1>
-                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                </div>
-                                <div class="modal-body">
-                                    <form action="" method="post">
-                                        <div class="mb-3">
-                                            <label for="exampleInputEmail1" class="form-label">Title</label>
-                                            <input type="text" class="form-control" name="title" required>
-                                        </div>
-                                        <div class="mb-3">
-                                            <label for="exampleInputEmail1" class="form-label">Description</label>
-                                            <input type="text" class="form-control" name="description" required>
-                                        </div>
-                                        <div class="mb-3">
-                                            <label for="exampleInputEmail1" class="form-label">Code</label>
-                                            <input type="text" class="form-control" name="code" required>
-                                        </div>
-                                        <div class="mb-3">
-                                            <label for="exampleInputEmail1" class="form-label">Price</label>
-                                            <input type="number" class="form-control" name="price" required>
-                                        </div>
-                                        <div class="mb-3">
-                                            <label for="status">Status:</label>
-                                            <select name="status" id="status">
-                                                <option value="true" selected>True</option>
-                                                <option value="false">False</option>
-                                            </select>
-                                        </div>
-                                        <div class="mb-3">
-                                            <label for="exampleInputEmail1" class="form-label">Stock</label>
-                                            <input type="number" class="form-control" name="stock" required>
-                                        </div>
-                                        <div class="mb-3">
-                                            <label for="exampleInputEmail1" class="form-label">Thumbnail</label>
-                                            <input type="file" class="form-control" name="thumbnail" required>
-                                        </div>
-                                        <div class="mb-3">
-                                            <label for="exampleInputEmail1" class="form-label">Category</label>
-                                            <input type="text" class="form-control" name="category" required>
-                                        </div>
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                    <button id="btnSend" type="submit" class="btn btn-primary">Create</button>
-                                </div>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
+            </form>
+        </div>
+        <div class="col-3">
+            <ul class="navbar-nav flex-row justify-content-around">
+                {{#if user}}
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle text-white pcolor-hover fs-5" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="bi bi-person-fill"></i> {{user.firstname}}
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="/api/users/profile">Profile</a></li>
+                            {{#if user.admin}}
+                                <li><a class="dropdown-item" href="/api/users">Users</a></li>
+                            {{/if}}
+                            <li><a class="dropdown-item" href="/api/users/logout">Logout</a></li>
+                        </ul>
+                    </li>
+                {{else}}
+                    <li class="nav-item">
+                        <a href="/login" class="nav-link text-white fs-5 pcolor-hover"><i class="bi bi-person-fill"></i> Log In</a>
+                    </li>
                 {{/if}}
-            {{/if}}
-            <div class="d-flex">
-                <ul class="nav">
-                    {{#if user}}
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle text-white fs-5" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                <i class="bi bi-person-fill"></i> {{user.firstname}}
-                            </a>
-                            <ul class="dropdown-menu">
-                                <li><a class="dropdown-item" href="/api/users/profile">Profile</a></li>
-                                <li><a class="dropdown-item" href="/api/users/logout">Logout</a></li>
-                            </ul>
-                        </li>
-                    {{else}}
-                        <a href="/login" class="nav-link text-white fs-5 mx-4"><i class="bi bi-person-fill"></i> Log In</a>
-                    {{/if}}
-                    {{#if user}}
-                        <li class="nav-item">
-                            <a href="/api/carts/{{user.cartId}}" class="nav-link text-white fs-5 mx-4"><i class="bi bi-cart3"></i> My Cart</a>
-                        </li>
-                    {{/if}}
-                </ul>
-            </div>
+                {{#if user}}
+                    <li class="nav-item">
+                        <a href="/api/carts/{{user.cartId}}" class="nav-link text-white fs-5 pcolor-hover"><i class="bi bi-cart3"></i> My Cart</a>
+                    </li>
+                {{else}}
+                    <li class="nav-item">
+                        <a href="/api/carts/anonymus" class="nav-link text-white fs-5 pcolor-hover"><i class="bi bi-cart3"></i> My Cart</a>
+                    </li>
+                {{/if}}
+            </ul>
         </div>
     </div>
-</nav>
+</div>
+
+<div class="bg-black border-top border-success">
+    <div class="container">
+        <nav class="navbar navbar-expand-lg d-flex justify-content-center navbar-2">
+            <ul class="nav">
+                <li class="nav-item dropdown drop-li">
+                    <a class="nav-link dropdown-toggle text-white pcolor-hover" role="button" data-bs-toggle="dropdown" aria-expanded="false"> Categories </a>
+                    <ul class="dropdown-menu drop-ul p-0 border border-2 rounded">
+                        <li><a class="dropdown-item pcolor-hover border border-1" href="/api/products/category/motherboards"><i class="bi bi-motherboard"></i> Motherboards</a></li>
+                        <li><a class="dropdown-item pcolor-hover border border-1" href="/api/products/category/processors"><i class="bi bi-cpu"></i> Processors</a></li>
+                        <li><a class="dropdown-item pcolor-hover border border-1" href="/api/products/category/storage"><i class="bi bi-hdd"></i> Storage</a></li>
+                        <li><a class="dropdown-item pcolor-hover border border-1" href="/api/products/category/memory"><i class="bi bi-memory"></i> Ram Memory</a></li>
+                        <li class="dropend border border-1">
+                            <a class="nav-link dropdown-toggle mx-1 pcolor-hover" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                Peripherals
+                            </a>
+                            <ul class="dropdown-menu drop-ul p-0 border border-2 rounded">
+                                <li><a class="dropdown-item pcolor-hover border border-1" href="/api/products/category/mouses"><i class="bi bi-mouse3"></i> Mouses</a></li>
+                                <li><a class="dropdown-item pcolor-hover border border-1" href="/api/products/category/keyboards"><i class="bi bi-keyboard"></i> Keyboards</a></li>
+                                <li><a class="dropdown-item pcolor-hover border border-1" href="/api/products/category/headphones"><i class="bi bi-headset"></i> Headphones</a></li>
+                                <li><a class="dropdown-item pcolor-hover border border-1" href="/api/products/category/microphones"><i class="bi bi-mic"></i> Microphones</a></li>
+                                <li><a class="dropdown-item pcolor-hover border border-1" href="/api/products/category/webcams"><i class="bi bi-webcam"></i> Webcams</a></li>
+                            </ul>
+                        </li>
+                        <li><a class="dropdown-item pcolor-hover border border-1" href="/api/products/category/powersupply"><i class="bi bi-power"></i> Power Supply</a></li>
+                        <li><a class="dropdown-item pcolor-hover border border-1" href="/api/products/category/towers"><i class="bi bi-pc"></i> Towers</a></li>
+                        <li class="dropend">
+                            <a class="nav-link dropdown-toggle mx-1 pcolor-hover" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="bi bi-gpu-card"></i> Video Cards
+                            </a>
+                            <ul class="dropdown-menu drop-ul p-0 border border-2 rounded">
+                                <li><a class="dropdown-item pcolor-hover border border-1" href="/api/products/category/amd video cards"><i class="bi bi-amd"></i> AMD</a></li>
+                                <li><a class="dropdown-item pcolor-hover border border-1" href="/api/products/category/nvidia video cards"><i class="bi bi-nvidia"></i> Nvidia</a></li>
+                            </ul>
+                        </li>
+                        <li><a class="dropdown-item pcolor-hover border border-1" href="/api/products/category/refrigeration"><i class="bi bi-fan"></i> Refrigeration</a></li>
+                        <li><a class="dropdown-item pcolor-hover border border-1" href="/api/products/category/refrigeration"><i class="bi bi-usb-symbol"></i> Connectivity</a></li>
+                    </ul>
+                </li>
+                <button class="navbar-toggler text-white pcolor-hover" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse2" aria-expanded="false" >
+                    <i class="bi bi-arrow-down-square-fill "></i> More
+                </button>
+                <div class="collapse navbar-collapse" id="navbarCollapse2">
+                    <li class="nav-item border-start border-secondary"><a href="/api/products/category/notebooks" class="nav-link text-white pcolor-hover"><i class="bi bi-laptop"></i> Notebooks</a></li>
+                    <li class="nav-item border-start border-secondary"><a href="/api/products/category/computers" class="nav-link text-white pcolor-hover"><i class="bi bi-pc-display"></i> Computers</a></li>
+                    <li class="nav-item border-start border-secondary"><a href="/api/products/category/monitors" class="nav-link text-white pcolor-hover"></i><i class="bi bi-display"></i> Monitors</a></li>
+                    <li class="nav-item border-start border-secondary"><a href="/api/products/category/videocards" class="nav-link text-white pcolor-hover"><i class="bi bi-gpu-card"></i> GPU Cards</a></li>
+                </div> 
+            </ul>
+        </nav>
+    </div>
+</div>

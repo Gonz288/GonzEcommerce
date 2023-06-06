@@ -3,6 +3,7 @@ const {ProductsRepository} = require("../repositories/products.repository");
 const productsService = new ProductsRepository(new Products());
 const multer = require('multer');
 const fs = require("fs");
+const {logger} = require("../config/utils");
 
 const storage = multer.diskStorage({
     destination: function(req,file,cb){
@@ -54,23 +55,30 @@ const getAllProducts = async (req, res) => {
             prevLink: productsPage.hasPrevPage != false ? `${optionsUrl}&page=${page - 1}` : null,
             nextLink: productsPage.hasNextPage != false ? `${optionsUrl}&page=${page + 1}` : null,
         }
-        res.status(200).render("realTimeProducts", {object});
+        res.status(200).render("principalPage", {object});
     } catch (err) {
         res.status(500).send(err.message);
     }
 };
 
+const getProductById = async (req,res) =>{
+    const {pid} = req.params;
+    try{
+        const product = await productsService.getOne(pid);
+        const moreProducts = await productsService.get({category: product.category},{});
+        res.status(200).render("productId", {product: product, moreProducts: moreProducts.docs});
+    } catch(error){
+        res.status(500).send("ERROR");
+    }
+};
+
 const getProductsByCategory = async (req, res) => {
-    const limit = req.query.limit || 5;
-    let optionsUrl = `?limit=${limit}`;
-    let page = parseInt(req.query.page) || 1;
+    let optionsUrl;
     if(req.query.sort){
-        if(!optionsUrl.includes("sort")){
-            optionsUrl = optionsUrl + `&sort=${req.query.sort}`;
-        }
+        optionsUrl = `?sort=${req.query.sort}`;
     }
 
-    const options = {page: page, limit: limit, sort: req.query.sort ? {price: req.query.sort} : {}};
+    const options = {sort: req.query.sort ? {price: req.query.sort} : {}};
 
     const {category} = req.params;
 
@@ -135,7 +143,7 @@ const createProduct = async (req, res) =>{
                         console.log('Imagen eliminada correctamente');
                     }
                 });
-                res.status(400).redirect("/api/products");
+                res.status(400).redirect("/api/products",req.flash("error", "Couldn't create product"));
                 return;
             }else{
                 try {
@@ -143,8 +151,12 @@ const createProduct = async (req, res) =>{
                     req.session.user.premium ? owner = req.session.user.email : owner = "admin";
                     const myProduct = {title,description,code,price,thumbnail:urlThumbnail,stock,category,status,owner:"admin"};
                     const response = await productsService.create(myProduct);
+                    req.flash("success","Product was created successfully");
                     res.status(200).redirect("/api/products");
+                    console.log(req.file);
                 } catch (error) {
+                    logger.error(`Failed to create product: ${error}`)
+                    req.flash("error","Internal Server Error, couldn't create product");
                     res.status(500).redirect("/api/products");
                 }
             }
@@ -249,4 +261,4 @@ const updateProduct = async (req,res) =>{
     }
 };
 
-module.exports = {getAllProducts, getProductsByCategory, getProductsBySearch, createProduct, deleteProduct, updateProduct};
+module.exports = {getAllProducts,getProductById, getProductsByCategory, getProductsBySearch, createProduct, deleteProduct, updateProduct};

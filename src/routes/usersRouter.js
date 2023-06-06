@@ -26,6 +26,45 @@ const storageDocuments = multer.diskStorage({
 const uploadProfile = multer({storage: storageProfile}).single("img");
 const uploadDocuments = multer({storage: storageDocuments}).array("documents", 5);
 
+usersRouter.get("/", async(req,res)=>{
+    if(req.session.user.admin){
+        const users = await usersModel.find({},{
+            _id: 1,
+            firstname: 1,
+            lastname: 1,
+            age: 1,
+            email: 1,
+            premium: 1,
+            admin: 1,
+            documents: 1,
+            last_connection: 1
+        });
+        res.status(200).render("users.handlebars", {users});
+    }else{  
+        res.status(203).send("No tienes Acceso");
+    }
+});
+
+usersRouter.get("/user/:uid", async(req,res)=>{
+    if(req.session.user.admin){
+        const { uid } = req.params;
+        const userDB = await usersModel.findById(uid,{
+            _id: 1,
+            firstname: 1,
+            lastname: 1,
+            age: 1,
+            email: 1,
+            premium: 1,
+            admin: 1,
+            documents: 1,
+            last_connection: 1
+        });
+        res.status(200).render("userId.handlebars", {userDB});
+    }else{  
+        res.status(203).send("No tienes Acceso");
+    }
+});
+
 usersRouter.post("/profile", uploadProfile, async (req,res)=>{
     if(req.session.user){
         try{
@@ -127,18 +166,42 @@ usersRouter.get("/profile", async (req,res)=>{
     }
 });
 
-usersRouter.get("/premium/:uid", async(req,res) =>{
+usersRouter.post("/premium/:uid", async(req,res) =>{
     if(req.session.user.admin){
         const { uid } = req.params;
+        const { premium } = req.body;
         try{
             const user = await usersModel.findById(uid);
-            if(user.documents.length >= 3){
-                user.premium = true;
+            if(premium === "false"){
+                user.premium = premium;
                 const saveUser = await usersModel.findByIdAndUpdate(uid, user);
                 res.send("Se ha cambiado el estado del premium del usuario");
             }else{
-                res.send("Error, el usuario todavia no ha subido toda la documentacion.");
+                if(user.documents.length >= 3){
+                    user.premium = premium;
+                    const saveUser = await usersModel.findByIdAndUpdate(uid, user);
+                    res.send("Se ha cambiado el estado del premium del usuario");
+                }else{
+                    res.send("Error, el usuario todavia no ha subido toda la documentacion.");
+                }
             }
+        }catch(error){
+            throw error;
+        }
+    }else{
+        res.status(401).send("No tienes Acceso a esta seccion.");
+    }
+});
+
+usersRouter.post("/admin/:uid", async(req,res) =>{
+    if(req.session.user.admin){
+        const { uid } = req.params;
+        const { admin } = req.body;
+        try{
+            const user = await usersModel.findById(uid);
+            user.admin = admin;
+            const saveUser = await usersModel.findByIdAndUpdate(uid, user);
+            res.send("Se ha cambiado el estado del admin del usuario");
         }catch(error){
             throw error;
         }

@@ -1,0 +1,59 @@
+<div class="container-lg my-5">
+    {{#if product}}
+        <h5 class="text-white d-flex">
+            <a class="nav-link pcolor-hover text-capitalize" href="/api/products/category/{{product.category}}"> {{product.category}} </a>
+            <i class="mx-2"> &gt; </i>
+            <p> {{product.title}}</p>
+        </h5>
+        <div class="card" style="background-color:#d6d6d6;">
+            <div class="row m-0">
+                <div class="col-5 border-end border-secondary m-0 p-4">
+                    <img src="{{product.thumbnail}}" class="img-fluid" alt="{{product.title}}">
+                </div>
+                <div class="col-7 m-0 p-0">
+                    <div class="card-header p-3 border-secondary">
+                        <h4>{{product.description}} </h4>
+                        <p class="m-0 p-0">Code: {{product.code}}</p>
+                    </div>
+                    <div class="card-body">
+                        <h5 class="text-success fs-4 fw-semibold">Price: ${{product.price}}</h5>
+                        <div class="d-flex m-0 p-0">
+                            <button class="btn fs-4" onclick="restar()">-</button>
+                            <div class="count border border-secondary rounded justify-content-center align-items-center py-2 px-4"><p class="fs-4 m-0 p-0" id="quantity">1</p></div>
+                            <button class="btn fs-4" onclick="sumar()">+</button>
+                            {{#if user}}
+                                <form method="POST" action="/api/carts/{{user.cartId}}">
+                                    <input type="hidden" name="productId" value="{{product.id}}">
+                                    <input type="hidden" name="quantity" value="1" id="quantityInput">
+                                    <button class="btn btn-success"><i class="bi bi-cart3"></i> Add to Cart</a></button>
+                                </form>
+                            {{else}}
+                                <p class="fs-4 fw-semibold text-black">Log in to add products to cart</p>
+                            {{/if}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {{/if}}
+    <div class="pcolor mt-5">
+        <h3 class="text-products">Similar Products: </h3>
+        <swiper-container class="mySwiper" navigation="true" slides-per-view="auto"
+            space-between="30" free-mode="true" loop="false">
+            {{#each moreProducts}}
+                <swiper-slide class="similarProducts">
+                    <div class="card card-product text-start">
+                        <img src="{{this.thumbnail}}" alt="{{this.title}}">
+                        <div class="card-body bg-dark">
+                            <h5 class="card-title text-white">{{this.description}}</h5>
+                            <p class="pcolor fs-4"><span class="text-white">Price:</span> ${{this.price}}</p>
+                        </div>
+                        <div class="card-footer bg-dark" style="background-color: none; background:none;">
+                            <button class="btn btn-products"><a href="/api/products/{{this.id}}" class="nav-link"> View more </a></button>
+                        </div>
+                    </div>
+                </swiper-slide>
+            {{/each}}
+        </swiper-container>
+    </div>
+</div>

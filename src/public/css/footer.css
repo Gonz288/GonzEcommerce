@@ -1,0 +1,32 @@
+.nav-footer .nav-link{
+    color: #fff;
+}
+
+footer .form-control{
+    background: none;
+    color: #fff;
+    border: 1px solid #01ff8d;
+}
+
+footer .form-control::placeholder{
+    color: rgb(131, 131, 131)
+}
+
+footer .form-control:focus{
+    color: #fff;
+    background: none;
+    box-shadow: none;
+    border: 2px solid #01ff8d;
+}
+
+.nav-footer{
+    justify-content: center;
+}
+
+.nav-footer .nav-link:hover{
+    color:#01ff8d;
+}
+
+footer .border-top{
+    border-color: #01ff8d!important;
+}

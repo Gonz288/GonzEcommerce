@@ -37,10 +37,10 @@ class CartManager {
             throw err;
         }
     }
-    async addProduct(cartId, productId) {
+    async addProduct(cartId, productId, quantity) {
         const myProduct = {
             product: productId,
-            quantity: 1,
+            quantity: quantity,
         };
         try {
             const result = await cartModel.find({ _id: cartId });
@@ -125,14 +125,14 @@ class CartManager {
             throw err;
         }
     }
-    async deleteProduct(cartId, productId){
+    async deleteProduct(cid, pid){
         try{
-            const result = await cartModel.find({_id: cartId});
-            const index = result[0].products.findIndex((product) => product.product.toString() === productId);
+            const cart = await cartModel.findOne({_id: cid});
+            const index = cart.products.findIndex((product) => product._id.toString() === pid);
             if(index !== -1){
-                result[0].products.splice(index,1);
-                const resultSave = await cartModel.findByIdAndUpdate(cartId, {
-                    products: result[0].products,
+                cart.products.splice(index,1);
+                const resultSave = await cartModel.findByIdAndUpdate(cid, {
+                    products: cart.products,
                 });
                 return resultSave;
             }else{
@@ -145,38 +145,26 @@ class CartManager {
     async finalizePurchase(cid,userEmail){
         try{
             const cart = await cartModel.findById({_id: cid}).populate("products.product");
-            if(cart.products.length === 0){
-                console.log("No hay productos en el carrito");
-            }else{
-                const productsPurchase = [];
-                let totalPrice = 0;
-                for(let i = 0; i < cart.products.length; i++){
-                    if(cart.products[i].quantity > cart.products[i].product.stock){
-                        console.log("No hay suficiente stock de ese producto");
-                    }else{
-                        let newStock = cart.products[i].product.stock - cart.products[i].quantity;
-                        totalPrice = totalPrice + (cart.products[i].quantity * cart.products[i].product.price);
-                        productsPurchase.push(cart.products[i]);
-                        let saveProduct = await productModel.findByIdAndUpdate(cart.products[i].product._id, {stock: newStock});
-                        cart.products.splice(i,1);
-                        i--;
-                    }
-                }
-                if(productsPurchase.length != 0){
-                    let saveCart = await cartModel.findByIdAndUpdate(cid, {products: cart.products});
-                    const myTicket = {
-                        code: Crypto.randomBytes(16).toString("hex").substring(0, 6),
-                        purchase_datetime: new Date(),
-                        amount: totalPrice,
-                        products: productsPurchase,
-                        purchaser: userEmail
-                    }
-                    const ticket = await ticketModel.create(myTicket);
-                    return ticket;
-                }else{
-                    return "No se pudo completar la compra.";
-                }
+            let productsPurchase = [];
+            let totalPrice = 0;
+            for(let i = 0; i < cart.products.length; i++){
+                let newStock = cart.products[i].product.stock - cart.products[i].quantity;
+                productsPurchase.push(cart.products[i]);
+                totalPrice = totalPrice + (cart.products[i].quantity * cart.products[i].product.price);
+                let saveProduct = await productModel.findByIdAndUpdate(cart.products[i].product._id, {stock: newStock});
+                cart.products.splice(i,1);
+                i--;
             }
+            let saveCart = await cartModel.findByIdAndUpdate(cid, {products: cart.products});
+            const myTicket = {
+                code: Crypto.randomBytes(16).toString("hex").substring(0, 6),
+                purchase_datetime: new Date(),
+                amount: totalPrice,
+                products: productsPurchase,
+                purchaser: userEmail
+            }
+            const ticket = await ticketModel.create(myTicket);
+            return ticket;
         }catch(error){
             throw error;
         }

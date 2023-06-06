@@ -1,34 +1,31 @@
-<!-- Navbar  -->
-{{> header}}
-
-<div class="container mt-4">
-    <h1 class="text-center title-category mb-5">{{category}}</h1>
+<div class="container-xl my-5">
+    <h1 class="text-center title-category mb-5 text-white">{{category}}</h1>
     <div class="text-end mb-3">
         <div class="dropdown">
-            <label class="form-label mx-2">Order By: </label>
-            <button class="btn border dropdown-toggle px-4" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+            <label class="form-label mx-2 text-white" >Order By: </label>
+            <button class="btn border dropdown-toggle px-4 text-white" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                 Select...
             </button>
             <ul class="dropdown-menu">
-                <li><a href="/api/products/{{category}}?sort=asc" class="dropdown-item">Menor Precio</a></li>
-                <li><a href="/api/products/{{category}}?sort=desc" class="dropdown-item">Mayor Precio</a></li>
+                <li><a href="/api/products/category/{{category}}?sort=asc" class="dropdown-item">Menor Precio</a></li>
+                <li><a href="/api/products/category/{{category}}?sort=desc" class="dropdown-item">Mayor Precio</a></li>
             </ul>
         </div>
     </div>
     <div class="row">
-        <div class="col-2">
+        <div class="col-3 col-xl-2">
             {{> verticalNav}}
         </div>
-        <div class="col-10">
-            <div class="row row-cols-sm-1 row-cols-lg-3 row-cols-md-2 g-4">
+        <div class="col-9 col-xl-10 px-5 px-xl-3">
+            <div class="row row-cols-sm-1 row-cols-lg-2 row-cols-xl-3 row-cols-md-2 g-4">
                 {{#each object.payload}}
                     <div class="col">
-                        <div class="card" style="min-height: 450px">
-                            <img class="img-fluid" style="height: 250px; padding: 25px;" src="{{this.thumbnail}}" alt="{{this.title}}">
-                            <div class="card-body">
-                                <h5 class="card-title text-center">{{this.description}}</h5>
-                                <p class="text-success fs-4 fw-semibold">${{this.price}}</p>
-                                {{#if ../user.admin}}
+                        <div class="card border border-secondary" style="max-height: 490px; min-height: 490px; background-color: none; background:none;">
+                            <img class="img-fluid" style="height: 250px; width: 320px; margin: 0 auto; padding: 25px" src="{{this.thumbnail}}" alt="{{this.title}}">
+                            <div class="card-body bg-dark border-top border-secondary">
+                                <h5 class="card-title text-white">{{this.description}}</h5>
+                                <p class="fs-4 fw-semibold pcolor">${{this.price}}</p>
+                                {{#if ../user.admin }}
                                     <div class="buttons d-flex justify-content-end">
                                         <form action="/api/products/delete/{{this.id}}?_method=DELETE" method="POST">
                                             <input type="hidden" name="_method" value="DELETE">
@@ -36,12 +33,10 @@
                                         </form>
                                         <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalPutProductId{{this.id}}"><i class="bi bi-pencil-square"></i></button>
                                     </div>
-                                {{else}}    
-                                    <form action="/api/carts/642de9c5a9771dcd669f827c" method="post" class="mt-3">
-                                        <input type="hidden" name="product" value="{{this._id}}">
-                                        <button class="btn btn-success" type="submit"><a class="nav-link"><i class="bi bi-cart3"></i> Add To Cart</a></button>
-                                    </form>
                                 {{/if}}
+                            </div>
+                            <div class="card-footer bg-dark" style="background-color: none; background:none;">
+                                <button class="btn btn-products"><a href="/api/products/{{this.id}}" class="nav-link"> View more </a></button>
                             </div>
                         </div>
                     </div>
@@ -54,7 +49,7 @@
                                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                 </div>
                                 <div class="modal-body">
-                                    <form action="products/put/{{this.id}}?_method=PUT" method="POST">
+                                    <form action="/api/products/put/{{this.id}}?_method=PUT" method="POST" enctype="multipart/form-data">
                                         <input type="hidden" name="_method" value="PUT">
                                         <div class="mb-3">
                                             <label for="exampleInputEmail1" class="form-label">Title</label>
@@ -84,7 +79,9 @@
                                             <input type="number" class="form-control" name="stock" value="{{this.stock}}" required>
                                         </div>
                                         <div class="mb-3">
-                                            <label for="exampleInputEmail1" class="form-label">Thumbnail</label>
+                                            <label for="exampleInputEmail1" class="form-label">Thumbnail: </label>
+                                            <img src="{{this.thumbnail}}" width="200px" height="150px" alt="{{this.title}}">
+                                            <p class="form-label">Change Thumbnail: </p>
                                             <input type="file" class="form-control" name="thumbnail" value="{{this.thumbnail}}" required>
                                         </div>
                                         <div class="mb-3">

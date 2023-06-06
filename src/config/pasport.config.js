@@ -17,19 +17,19 @@ const initializePassport = () =>{
     });
     passport.use("register", new LocalStrategy(
         {passReqToCallback:true, usernameField: "email"}, async(req,username,password,done)=>{
-            const {firstname, lastname, email, age} = req.body;
-            let {admin} = req.body;
+            const {firstname, lastname, email, age, confirm_password} = req.body;
             try{
                 let user = await usersModel.findOne({email:username});
                 if(user){
-                    return done(null, false);
-                }
+                    return done(null, false, req.flash("signupMessage","This account is already registered!"));
+                }else if(!email || !firstname || !lastname || !age || !password || !confirm_password){
+                    return done(null, false, req.flash("signupMessage","Missing data"));
+                }else if(password !== confirm_password) return done(null,false, req.flash("signupMessage","Passwords don't match"))
                 const newCart = new cartModel();
                 await newCart.save();
                 const newUser = {
                     firstname,
                     lastname,
-                    admin,
                     email,
                     age,
                     password: bcrypt.hashSync(password, bcrypt.genSaltSync(10)),
@@ -38,21 +38,21 @@ const initializePassport = () =>{
                 let result = await usersModel.create(newUser);
                 return done(null,result);
             }catch(error){
-                logger.error(`Failed Register: ${error}`)
+                logger.error(`Failed Register: ${error}`);
                 return done("Error:" + error);
             }
         }
     ));
-    passport.use("login", new LocalStrategy({usernameField: "email"}, async(username, password, done)=>{
+    passport.use("login", new LocalStrategy(
+        {passReqToCallback:true,usernameField: "email"}, async(req,username, password,done)=>{
         try{
             const user = await usersModel.findOne({email:username});
             if(!user){
                 console.log("User doesn't exist");
-                return done(null,false);
+                return done(null,false,req.flash("loginMessage","This account doesn't exist or your account was eliminated."));
             }
-            if(!bcrypt.compareSync(password,user.password)) return done(null, false);
-            
-            const saveDate = await usersModel.findOneAndUpdate({email:username}, {last_connection: new Date()})
+            if(!bcrypt.compareSync(password,user.password)) return done(null, false, req.flash("loginMessage", "Your password is incorrect"));
+            const saveDate = await usersModel.findOneAndUpdate({email:username}, {last_connection: new Date()});
             return done(null,user);
         }catch(error){
             logger.error(`Failed Login: ${error}`)

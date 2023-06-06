@@ -18,7 +18,6 @@ class ProductManager {
                     { description: { $regex: query, $options: 'i' } },
                 ]
             });
-            console.log(products);
             return products;
         }catch(err){
             throw err;

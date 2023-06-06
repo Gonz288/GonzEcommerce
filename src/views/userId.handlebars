@@ -1,0 +1,88 @@
+<div class="container my-5">
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="text-center">User</h3>
+                </div>
+                <div class="card-body px-5">
+                    <div class="mb-3">
+                        <label for="img"><b>Photo:</b></label>
+                        {{#if userDB.img}}
+                            <img src="{{userDB.img}}" class="p-2" width="150px" height="150px" alt="{{userDB.firstname}}">
+                        {{else}}
+                            <img src="/img/profiles/user.jpg" class="p-2" width="150px" height="150px" alt="User">    
+                        {{/if}}
+                    </div>
+                    <div class="mb-3">
+                        <label for="firstname"><b>Firstname: </b>{{userDB.firstname}}</label>
+                    </div>
+                    <div class="mb-3">
+                        <label for="lastname"><b>Lastname: </b>{{userDB.lastname}}</label>
+                    </div>
+                    <div class="mb-3">
+                        <label for="email"><b>Email:</b> {{userDB.email}}</label>
+                    </div>
+                    <div class="mb-3">
+                        <form method="post" action="/api/users/premium/{{userDB._id}}">
+                            <label for="premium" class="form-label"><b>User Premium: </b></label>
+                                <select name="premium" class="form-select w-50">
+                                    {{#if userDB.premium}}
+                                        <option value="true" selected>True</option>
+                                        <option value="false">False</option>
+                                    {{else}}
+                                        <option value="false" selected>False</option>
+                                        <option value="true">True</option>
+                                    {{/if}}
+                                </select>
+                            <button class="btn btn-primary mt-2">Change</button>
+                        </form>
+                    </div>
+                    <div class="mb-3">
+                        <form method="post" action="/api/users/admin/{{userDB._id}}">
+                            <label for="admin" class="form-label"><b>Admin: </b></label>
+                                <select name="admin" class="form-select w-50">
+                                    {{#if userDB.admin}}
+                                        <option value="true" selected>True</option>
+                                        <option value="false">False</option>
+                                    {{else}}
+                                        <option value="false" selected>False</option>
+                                        <option value="true">True</option>
+                                    {{/if}}
+                                </select>
+                            <button class="btn btn-primary mt-2">Change</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="text-center">Documents</h3>
+                </div>
+                <div class="card-body">
+                    <div class="documents p-3">
+                        {{#if dbUser.documents}}
+                            {{#each dbUser.documents}}
+                                <div class="border border-info border-2 rounded p-2 mb-3">
+                                <a class="nav-link" href="{{this.reference}}" target="_blank">
+                                    <h6>{{this.name}}</h6>
+                                    <img src="{{this.reference}}" width="100px" height="100px" alt="{{this.name}}">
+                                </a>
+                                <form action="/api/users/profile/deleteDocument/{{this.id}}?_method=DELETE" method="POST" class="text-end">
+                                    <input type="hidden" name="_method" value="DELETE">
+                                    <button type="submit" class="btn btn-sm btn-danger"><i class="bi bi-trash"></i></button>
+                                </form>
+                                </div>
+                            {{/each}}
+                        {{else}}
+                            <h5 class="text-center">Documents Not Found</h5>
+                        {{/if}}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

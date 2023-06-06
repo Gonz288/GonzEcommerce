@@ -1,0 +1,46 @@
+/* Header */
+.navbar-2 .drop-li .drop-ul{
+    display: none;
+    margin: 0 48px;
+}
+.navbar-2 .drop-ul li{
+    background-color: #202528;
+}
+.navbar-2 .drop-ul li a:hover{
+    background-color: #282c2d;
+}
+.navbar-2 .drop-ul li a{
+    color: #e6e6e6;
+}
+.drop-li:hover > .drop-ul, .dropend:hover > .drop-ul{
+    display: block;
+    margin-top: .125em;
+    margin-left: .125em;
+}
+@media screen and (min-width: 769px){
+.dropend:hover > .drop-ul{
+    position: absolute;
+    top: 0;
+    left: 100%;
+    }
+}
+.dropend:hover > .drop-ul{
+    position: absolute;
+    top: 0;
+    left: 100%;
+    margin-left: .125em;
+}
+
+.navbar-2 .collapse .nav-item{
+    padding: 0 48px;
+}
+@media screen and (max-width: 1200px){
+    .navbar-2 .collapse .nav-item{
+        padding: 0 23px;
+    }
+}
+@media screen and(max-width: 992){
+    .navbar-2 .collapse .nav-item{
+        padding: 0;
+    }
+}
