@@ -3,7 +3,18 @@ const {ProductsRepository} = require("../repositories/products.repository");
 const productsService = new ProductsRepository(new Products());
 const multer = require('multer');
 const fs = require("fs");
+const nodemailer = require("nodemailer");
 const {logger} = require("../config/utils");
+
+const transport = nodemailer.createTransport({
+    service:'gmail',
+    port: 587,
+    auth:{
+        user:'gonzagonzalez288@gmail.com',
+        pass:'icunvygjuhenqqpd'
+    }
+});
+
 
 const storage = multer.diskStorage({
     destination: function(req,file,cb){
@@ -148,12 +159,12 @@ const createProduct = async (req, res) =>{
             }else{
                 try {
                     let urlThumbnail = `/img/products/${req.file.filename}`;
+                    let owner;
                     req.session.user.premium ? owner = req.session.user.email : owner = "admin";
-                    const myProduct = {title,description,code,price,thumbnail:urlThumbnail,stock,category,status,owner:"admin"};
+                    const myProduct = {title,description,code,price,thumbnail:urlThumbnail,stock,category,status,owner};
                     const response = await productsService.create(myProduct);
                     req.flash("success","Product was created successfully");
                     res.status(200).redirect("/api/products");
-                    console.log(req.file);
                 } catch (error) {
                     logger.error(`Failed to create product: ${error}`)
                     req.flash("error","Internal Server Error, couldn't create product");
@@ -171,16 +182,28 @@ const deleteProduct = async (req,res) =>{
         const { id } = req.params;
         try {
             const result = await productsService.delete(id);
-            console.log(result);
-            fs.unlink(`./src/public/${result.thumbnail}`, (err) => {
-                if (err) {
-                    console.error('Error al eliminar la imagen:', err);
-                } else {
-                    console.log('Imagen eliminada correctamente');
-                }
+            fs.unlink(`./src/public/${result.thumbnail}`, (error) => {
+                if (error) logger.error(`Failed to eliminate thumbnail: ${error}`)
             });
+            if(result.owner !== "admin"){
+                let resultEmail = await transport.sendMail({
+                    from:'"GonzE-Commerce" <gonzagonzalez288@gmail.com>',
+                    to: result.owner,
+                    subject: "Your product was eliminated, GonzE-Commerce",
+                    html: `
+                    <div>
+                        <h1>Your product was eliminated from GonzE-Commerce.</h1>
+                        <h4>This is just a notice message </h4>
+                    </div>
+                    `,
+                    attachments: []
+                });
+            }
+            req.flash("success","Product was deleted successfully");
             res.status(200).redirect("/api/products");
-        } catch (err) {
+        } catch (error) {
+            logger.error(`Failed to eliminate product: ${error}`)
+            req.flash("error","Internal Server Errror, coulnd´t delete product");
             res.status(500).redirect("/api/products");
         }
     }else if(req.session.user.premium){
@@ -196,15 +219,20 @@ const deleteProduct = async (req,res) =>{
                         console.log('Imagen eliminada correctamente');
                     }
                 });
+                req.flash("success","Product was deleted successfully");
                 res.status(200).redirect("/api/products");
             }else{
-                res.status(401).send("No tienes Acceso");
+                req.flash("error","You can only delete your products.");
+                res.status(401).redirect("/api/products");
             }
         }catch(error){
-            throw error;
+            logger.error(`Failed to eliminate product: ${error}`)
+            req.flash("error","Internal Server Errror, coulnd´t delete product");
+            res.status(500).redirect("/api/products");
         }
     }else{
-        res.status(401).send("No tienes Acceso");
+        req.flash("error","You don't have access to this section");
+        res.status(401).redirect("/api/products");
     }
 };
 

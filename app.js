@@ -61,7 +61,7 @@ app.use(
             mongoOptions: {
                 useUnifiedTopology: true,
             },
-            ttl: 2500,
+            ttl: 3600,
         }),
     })
 );

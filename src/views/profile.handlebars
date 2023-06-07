@@ -1,6 +1,12 @@
 <div class="container my-5">
     <div class="row">
       <div class="col-md-6">
+        {{#if success}}
+          <p class="text-success success rounded p-2">{{success}}</p>
+        {{/if}}
+        {{#if error}}
+          <p class="text-danger error rounded p-2">{{error}}</p>
+        {{/if}}
         <div class="card">
           <div class="card-header">
             <h3 class="text-center">My Profile</h3>

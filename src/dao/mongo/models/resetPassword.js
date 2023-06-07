@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 
 const resetPasswordSchema = new mongoose.Schema({
-    email:{
+    email: {
         type: String,
         required: true,
     },
@@ -9,17 +9,19 @@ const resetPasswordSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
-    expiration:{
+    expiration: {
         type: Date,
         required: true,
         expires: '60m',
-        default: Date.now()
+        default: function () {
+            return new Date(Date.now() + 60 * 60 * 1000);//Actually Date + 60 minutes
+        },
     },
     status: {
         type: Boolean,
         required: true,
         default: true,
-    }
+    },
 });
 
 const ResetPassword = mongoose.model("resetpassword", resetPasswordSchema);

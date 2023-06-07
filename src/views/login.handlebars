@@ -4,6 +4,9 @@
             {{#if loginMessage}}
                 <p class="text-danger fs-5 p-2 rounded error">{{loginMessage}}</p>
             {{/if}}
+            {{#if success}}
+                <p class="text-success success rounded p-2">{{success}}</p>
+            {{/if}}
         <form class="row g-0" action="/login" method="POST">
             <div class="mb-3">
                 <label for="email" class="form-label mx-1 fw-semibold">Email</label>

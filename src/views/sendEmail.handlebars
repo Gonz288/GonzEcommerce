@@ -1,13 +1,19 @@
 <div class="container signUp-container">
     <div class="card" style="max-width: 690px; padding:25px;">
         <h2 class="text-center mb-4">Forgot Password</h2>
+        {{#if success}}
+            <p class="text-success success rounded p-2">{{success}}</p>
+        {{/if}}
+        {{#if error}}
+            <p class="text-danger error rounded p-2">{{error}}</p>
+        {{/if}}
         <form class="row g-0" action="/recoverPassword/sendEmail" method="POST">
             <div class="mb-3 px-1">
                 <label for="email" class="form-label mx-1">Enter your Email</label>
-                <input type="email" name="email" class="form-control">
+                <input type="email" name="email" class="form-control" placeholder="user@gmail.com">
             </div>
             <p class="text">If the email exists, you will receive an email to recover the password.</p>
-            <button type="submit" class="btn btn-primary">Confirm</button>
+            <button type="submit" class="btn btn-success fw-semibold">Send</button>
         </form>
     </div>
 </div>

@@ -1,7 +1,6 @@
 const EErrors = require("../../services/errors/enums.js");
 const {logger} = require("../../config/utils");
 module.exports = (error, req, res, next) => {
-    console.log(error);
     logger.error(error);
     logger.error(error.cause);
     switch (error.code) {
