@@ -60,42 +60,6 @@ class CartManager {
             throw err;
         }
     }
-    async updateAll(cartId, productsArray){
-        try {
-            const result = await cartModel.find({ _id: cartId });
-            if(result[0].products.length === 0){
-                for (let i = 0; i < productsArray.length; i++) {
-                    let myProduct = {
-                        product: productsArray[i]._id,
-                        quantity: productsArray[i].quantity
-                    }
-                    result[0].products.push(myProduct);
-                }
-                const resultSave = await cartModel.findByIdAndUpdate(cartId, {
-                    products: result[0].products
-                });
-                return resultSave;
-            }else{
-                for(let i = 0; i < productsArray.length; i++){
-                    let InCart = false;
-                    for(let x = 0; x < result[0].products.length; x++){
-                        if(productsArray[i]._id === result[0].products[x].product.toString()){
-                            result[0].products[x].quantity = result[0].products[x].quantity + productsArray[i].quantity;
-                            InCart = true;
-                        }
-                    }
-                    if(!InCart){
-                        let myProduct = {product: productsArray[i]._id, quantity: productsArray[i].quantity}
-                        result[0].products.push(myProduct);
-                    }
-                }
-                const resultSave = await cartModel.findByIdAndUpdate(cartId, {products: result[0].products});
-                return resultSave;
-            }
-        } catch (err) {
-            throw err;
-        }
-    }
     async updateProduct(cartId, productObject){
         const myProduct = {
             product: productObject._id,

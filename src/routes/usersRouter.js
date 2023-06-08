@@ -1,9 +1,11 @@
 const express = require("express");
 const usersModel = require("../dao/mongo/models/usersModel");
+const cartModel = require("../dao/mongo/models/cartsModel");
 const usersRouter = express.Router();
 const multer = require('multer');
 const fs = require("fs");
 
+//Storage Thumbnails
 const storageProfile = multer.diskStorage({
     destination: function(req,file,cb){
         cb(null, './src/public/img/profiles');
@@ -25,6 +27,7 @@ const storageDocuments = multer.diskStorage({
 const uploadProfile = multer({storage: storageProfile}).single("img");
 const uploadDocuments = multer({storage: storageDocuments}).array("documents", 5);
 
+//Get All users
 usersRouter.get("/", async(req,res)=>{
     if(req.session.user.admin){
         const users = await usersModel.find({},{
@@ -45,6 +48,7 @@ usersRouter.get("/", async(req,res)=>{
     }
 });
 
+//Get User By ID (View for the admin)
 usersRouter.get("/user/:uid", async(req,res)=>{
     if(req.session.user.admin){
         const { uid } = req.params;
@@ -66,6 +70,23 @@ usersRouter.get("/user/:uid", async(req,res)=>{
     }
 });
 
+//Get User By ID (View for the user), render Profile
+usersRouter.get("/profile", async (req,res)=>{
+    if(req.session.user){
+        try{
+            const dbUser = await usersModel.findById(req.session.user._id);
+            res.status(201).render("profile",{dbUser});
+        }catch(error){
+            req.flash("error",`Internal Server Error`);
+            res.status(500).redirect("/api/products");
+        }
+    }else{
+        req.flash("error", "You don't have access to this section");
+        res.status(401).redirect("/api/products");
+    }
+});
+
+//Post User Fields
 usersRouter.post("/profile", uploadProfile, async (req,res)=>{
     if(req.session.user){
         try{
@@ -90,6 +111,7 @@ usersRouter.post("/profile", uploadProfile, async (req,res)=>{
     }
 });
 
+//Upload User Documents
 usersRouter.post("/profile/uploadDocuments", uploadDocuments, async(req,res)=>{
     if(req.session.user){
         try{
@@ -119,6 +141,7 @@ usersRouter.post("/profile/uploadDocuments", uploadDocuments, async(req,res)=>{
     }
 });
 
+//Delete User Documents
 usersRouter.delete("/profile/deleteDocument/:did", async(req,res)=>{
     if(req.session.user){
         try{
@@ -158,21 +181,7 @@ usersRouter.delete("/profile/deleteDocument/:did", async(req,res)=>{
     }
 });
 
-usersRouter.get("/profile", async (req,res)=>{
-    if(req.session.user){
-        try{
-            const dbUser = await usersModel.findById(req.session.user._id);
-            res.status(201).render("profile",{dbUser});
-        }catch(error){
-            req.flash("error",`Internal Server Error`);
-            res.status(500).redirect("/api/products");
-        }
-    }else{
-        req.flash("error", "You don't have access to this section");
-        res.status(401).redirect("/api/products");
-    }
-});
-
+//Change Premium Status
 usersRouter.post("/premium/:uid", async(req,res) =>{
     if(req.session.user.admin){
         const { uid } = req.params;
@@ -205,12 +214,13 @@ usersRouter.post("/premium/:uid", async(req,res) =>{
     }
 });
 
+//Change Admin Status
 usersRouter.post("/admin/:uid", async(req,res) =>{
     if(req.session.user.admin){
         const { uid } = req.params;
         const { admin } = req.body;
         try{
-            const user = await usersModel.findById(uid);
+            const user = await usersModel.findById({uid});
             user.admin = admin;
             const saveUser = await usersModel.findByIdAndUpdate(uid, user);
             req.flash("success",`User's admin status has been changed`);
@@ -225,12 +235,18 @@ usersRouter.post("/admin/:uid", async(req,res) =>{
     }
 });
 
+//Destroy Session
 usersRouter.get("/logout", async(req,res) =>{
-    const saveDate = await usersModel.findOneAndUpdate(req.session.user._id, {last_connection: new Date()});
-    req.session.destroy();
-    res.status(200).redirect("/login");
+    if(req.session.user){
+        const saveDate = await usersModel.findOneAndUpdate({_id:req.session.user._id}, {last_connection: new Date()});
+        req.session.destroy();
+        res.status(200).redirect("/login");
+    }else{
+        res.status(200).redirect("/login");
+    }
 });
 
+//Delete inactive Accounts (Two Days Ago)
 usersRouter.get("/deleteAccounts", async(req,res)=>{
     if(req.session.user.admin){
         const twoDays = new Date();
@@ -249,4 +265,27 @@ usersRouter.get("/deleteAccounts", async(req,res)=>{
     }
 });
 
+//Delete User By admin
+usersRouter.post("/delete/:uid", async(req,res)=>{
+    if(req.session.user.admin){
+        const { uid } = req.params;
+        try{
+            const user = await usersModel.deleteOne({_id:uid});
+            if(user){
+                const deleteCart = await cartModel.deleteOne(user.cartId);
+                req.flash("success","User deleted successfully");
+                res.status(200).redirect("/api/users");
+            }else{
+                req.flash("error","User not found, couldn't delete user");
+                res.status(404).redirect("/api/users");
+            }
+        }catch(error){
+            req.flash("error",`Internal Server Error, couldn't delete user`);
+            res.status(500).redirect("/api/users");
+        }
+    }else{
+        req.flash("error", "You don't have access to this section");
+        res.status(401).redirect("/api/products");
+    }
+});
 module.exports = usersRouter;

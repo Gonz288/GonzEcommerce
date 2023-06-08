@@ -2,8 +2,8 @@ const express = require("express");
 const config = require("./src/config/config");
 const productsRouter = require("./src/routes/productsRouter");
 const cartsRouter = require("./src/routes/cartsRouter");
-const handlebars = require("express-handlebars");
-const Handlebars = require("handlebars");
+const exphbs = require("express-handlebars");
+const handlebars = require("handlebars");
 const loginRouter = require("./src/routes/loginRouter");
 const signupRouter = require("./src/routes/signupRouter");
 const flash = require("connect-flash");
@@ -36,8 +36,8 @@ const swaggerOptions = {
     definition: {
         openapi: '3.0.1',
         info: {
-            title: "Documentando Con Swagger",
-            description: "Documentacion de los Carritos y Productos",
+            title: "Documenting with swagger",
+            description: "Documenting carts and products",
         },
     },
     apis: [`${__dirname}/src/docs/**/*.yaml`],
@@ -72,30 +72,60 @@ app.use(addLogger);
 app.use(cors());
 
 //Handlebars
-app.engine("handlebars", handlebars.engine({defaultLayout: 'main',partialsDir:__dirname + '/src/views/partials',handlebars: allowInsecurePrototypeAccess(Handlebars)}));
+const hbs = exphbs.create({
+    defaultLayout: 'main',
+    partialsDir: __dirname + '/src/views/partials',
+    handlebars: allowInsecurePrototypeAccess(handlebars)
+});
+hbs.handlebars.registerHelper('ifCond', function (v1, operator, v2, options) {
+    switch (operator) {
+        case '==':
+            return (v1 == v2) ? options.fn(this) : options.inverse(this);
+        case '===':
+            return (v1 === v2) ? options.fn(this) : options.inverse(this);
+        case '!=':
+            return (v1 != v2) ? options.fn(this) : options.inverse(this);
+        case '!==':
+            return (v1 !== v2) ? options.fn(this) : options.inverse(this);
+        case '<':
+            return (v1 < v2) ? options.fn(this) : options.inverse(this);
+        case '<=':
+            return (v1 <= v2) ? options.fn(this) : options.inverse(this);
+        case '>':
+            return (v1 > v2) ? options.fn(this) : options.inverse(this);
+        case '>=':
+            return (v1 >= v2) ? options.fn(this) : options.inverse(this);
+        case '&&':
+            return (v1 && v2) ? options.fn(this) : options.inverse(this);
+        case '||':
+            return (v1 || v2) ? options.fn(this) : options.inverse(this);
+        default:
+            return options.inverse(this);
+    }
+});
+app.engine("handlebars", hbs.engine);
 app.set("views", __dirname + "/src/views");
 app.set("view engine", "handlebars");
 app.use(express.static(__dirname + "/src/public"));
+
 
 //Global Variables
 app.use((req, res, next)=>{
     app.locals.success = req.flash("success");
     app.locals.error = req.flash("error");
-    app.locals.signupMessage = req.flash("signupMessage");
-    app.locals.loginMessage = req.flash("loginMessage");
     res.locals.user = req.session.user || null;
     next();
 });
 
 //Routes
 app.get("/loggerTest", (req,res)=>{
-    req.logger.debug("Prueba de debug");
-    req.logger.info("Prueba de info");
-    req.logger.warning("Prueba de warning");
-    req.logger.fatal("Prueba de fatal");
-    req.logger.error("Prueba de error");
-    req.logger.http("Prueba de http");
-    res.send({message: "Prueba de Logger"});
+    req.logger.debug("Debug test");
+    req.logger.info("Info test");
+    req.logger.warning("Warning test");
+    req.logger.fatal("Fatal test");
+    req.logger.error("Error test");
+    req.logger.http("Http test");
+    res.send({message: "Logger test"});
 });
 app.use("/payments", paymentRouter);
 app.use("/api/products", productsRouter);

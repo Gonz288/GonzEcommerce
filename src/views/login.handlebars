@@ -1,12 +1,7 @@
 <div class="container signIn-container mt-5">
     <div class="card border border-dark" style="max-width: 690px; padding:25px;">
         <h2 class="text-center mb-4">Sign In</h2>
-            {{#if loginMessage}}
-                <p class="text-danger fs-5 p-2 rounded error">{{loginMessage}}</p>
-            {{/if}}
-            {{#if success}}
-                <p class="text-success success rounded p-2">{{success}}</p>
-            {{/if}}
+        {{>cardInfo}}
         <form class="row g-0" action="/login" method="POST">
             <div class="mb-3">
                 <label for="email" class="form-label mx-1 fw-semibold">Email</label>

@@ -1,5 +1,11 @@
 <div class="container-lg my-5">
     <h4 class="fs-3 text-center text-white">Users</h4>
+        {{#if success}}
+            <p class="text-success success rounded p-2 fw-semibold">{{success}}</p>
+        {{/if}}
+        {{#if error}}
+            <p class="text-danger error rounded p-2 fw-semibold">{{error}}</p>
+        {{/if}}
     <div class="table-responsive">
         <table class="table text-white text-center">
             <thead>

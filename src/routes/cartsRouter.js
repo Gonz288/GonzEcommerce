@@ -1,35 +1,33 @@
 const express = require("express");
-const {getAllCarts, getCartById, createCart, deleteAllProductsByCart, finalizePurchase , deleteProductByCart, addProductsToCart, updateProductByCart, replaceProductsToCart} = require("../controllers/carts.controllers");
+const {getAllCarts, getCartById, createCart, deleteAllProductsByCart, finalizePurchase , deleteProductByCart, addProductsToCart, updateProductByCart} = require("../controllers/carts.controllers");
 const cartsRouter = express.Router();
+const isAdmin = require("../middlewares/auth/isAdmin");
 
-//Obtener todos los carritos
-cartsRouter.get("/", getAllCarts);
+//Get all carts
+cartsRouter.get("/", isAdmin, getAllCarts);
 
-//Obtener carrito por ID
+//Get Cart By Id
 cartsRouter.get("/:cid", getCartById);
 
-//Obtener carrito por ID
+//Get Cart By anonymus
 cartsRouter.get("/anonymus", getCartById);
 
-//Crear Carrito
-cartsRouter.post("/", createCart);
+//Create Cart
+cartsRouter.post("/", isAdmin, createCart);
 
-//Eliminar todos los productos del carrito
-cartsRouter.delete("/:cid", deleteAllProductsByCart);
+//Delete All Products By Cart
+cartsRouter.get("/:cid/products", deleteAllProductsByCart);
 
-//Eliminar Producto del Carrito
+//Delete Product By Cart
 cartsRouter.get("/:cid/products/:pid", deleteProductByCart);
 
-//Actualizar carrito con nuevos productos
-cartsRouter.put("/:cid", replaceProductsToCart);
-
-//Actualizar carrito agregando/sacando cantidad del mismo producto
+//Update Cart add/substract product
 cartsRouter.put("/:cid/products/:pid", updateProductByCart);
 
-//Agregar Producto/s al Carrito
+//Add product to the cart
 cartsRouter.post("/:cid", addProductsToCart);
 
-//Finalizar la compra
+//Finalize Purchase
 cartsRouter.get("/:cid/purchase", finalizePurchase);
 
 module.exports = cartsRouter;

@@ -21,22 +21,26 @@ const initializePassport = () =>{
             try{
                 let user = await usersModel.findOne({email:username});
                 if(user){
-                    return done(null, false, req.flash("signupMessage","This account is already registered!"));
+                    return done(null, false, req.flash("error","This account is already registered!"));
                 }else if(!email || !firstname || !lastname || !age || !password || !confirm_password){
-                    return done(null, false, req.flash("signupMessage","Missing data"));
-                }else if(password !== confirm_password) return done(null,false, req.flash("signupMessage","Passwords don't match"))
-                const newCart = new cartModel();
-                await newCart.save();
-                const newUser = {
-                    firstname,
-                    lastname,
-                    email,
-                    age,
-                    password: bcrypt.hashSync(password, bcrypt.genSaltSync(10)),
-                    cartId: newCart._id
+                    return done(null, false, req.flash("error","Missing data"));
+                }else if(password !== confirm_password) return done(null,false, req.flash("error","Passwords don't match"))
+                else{
+                    const newCart = new cartModel();
+                    await newCart.save();
+
+                    const newUser = {
+                        firstname,
+                        lastname,
+                        email,
+                        age,
+                        password: bcrypt.hashSync(password, bcrypt.genSaltSync(10)),
+                        cartId: newCart._id
+                    }
+
+                    let result = await usersModel.create(newUser);
+                    return done(null,result);
                 }
-                let result = await usersModel.create(newUser);
-                return done(null,result);
             }catch(error){
                 logger.error(`Failed Register: ${error}`);
                 return done("Error:" + error);
@@ -47,11 +51,9 @@ const initializePassport = () =>{
         {passReqToCallback:true,usernameField: "email"}, async(req,username, password,done)=>{
         try{
             const user = await usersModel.findOne({email:username});
-            if(!user){
-                console.log("User doesn't exist");
-                return done(null,false,req.flash("loginMessage","This account doesn't exist or your account was eliminated."));
-            }
-            if(!bcrypt.compareSync(password,user.password)) return done(null, false, req.flash("loginMessage", "Your password is incorrect"));
+            if(!user)return done(null,false,req.flash("error","This account doesn't exist or your account was eliminated."));
+            if(!bcrypt.compareSync(password,user.password)) return done(null, false, req.flash("error", "Your password is incorrect"));
+
             const saveDate = await usersModel.findOneAndUpdate({email:username}, {last_connection: new Date()});
             return done(null,user);
         }catch(error){
@@ -65,7 +67,6 @@ const initializePassport = () =>{
         callbackURL:"http://localhost:8080/api/sessions/githubcallback"
     }, async (accessToken, refreshToken, profile, done) =>{
         try{
-            console.log(profile);
             let user = await usersModel.findOne({email:profile._json.email});
             if(!user){
                 let newUser = {

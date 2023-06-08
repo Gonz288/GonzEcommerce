@@ -7,7 +7,6 @@ const {CartsRepository} = require("../repositories/carts.repository");
 const cartsService = new CartsRepository(new Carts());
 
 const stripe = require('stripe')(config.STRIPE_KEY);
-//Falta poner los productos del carrito en line_items y que funcione con ticketRouter
 
 paymentRouter.get('/create-checkout-session/:cid', async (req, res) => {
     const {cid} = req.params;

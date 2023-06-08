@@ -24,10 +24,10 @@ const getCartById = async (req, res) =>{
             for(let i = 0; i < cart.products.length; i++){
                 totalPrice = totalPrice + (cart.products[i].quantity * cart.products[i].product.price);
             }
-    
             res.status(200).render("cartId", {cart:cart, totalPrice:totalPrice});
         } catch (err) {
-            res.status(500).send(err.message);
+            req.flash("error", "Internal Server Error");
+            res.status(500).redirect("/api/products");
         }
     }else{
         res.render("cartId", {});
@@ -37,7 +37,7 @@ const getCartById = async (req, res) =>{
 const createCart = async (req, res) =>{
     try {
         const response = await cartsService.createCart();
-        res.status(200).send({ message: "Carrito creado", response });
+        res.status(200).send({ message: "Cart created", response});
     }catch (err) {
         res.status(500).send(err.message);
     }
@@ -45,22 +45,34 @@ const createCart = async (req, res) =>{
 
 const deleteAllProductsByCart = async (req, res) =>{
     const { cid } = req.params;
-    try{
-        const response = await cartsService.deleteAllProducts(cid);
-        res.status(200).send({ message: "Productos Eliminados", response });
-    }catch (err) {
-        res.status(500).send(err.message);
+    if(req.session.user.cartId === cid | req.session.user.admin){
+        try{
+            const response = await cartsService.deleteAllProducts(cid);
+            req.flash("success","Empty cart successfully");
+            res.status(200).redirect(`/api/carts/${cid}`);
+        }catch (err) {
+            console.log(err);
+            res.status(500).redirect(`/api/carts/${cid}`)
+        }
+    }else{
+        req.flash("error", "You don't have access to this section");
+        res.status(401).redirect("/api/products");
     }
 };
 
 const deleteProductByCart = async (req, res) =>{
     const { cid } = req.params;
     const { pid } = req.params;
-    try{
-        const response = await cartsService.deleteProduct(cid,pid);
-        res.status(200).redirect(`/api/carts/${cid}`);
-    }catch(err){
-        res.status(500).send(err.message);
+    if(req.session.user.cartId === cid | req.session.user.admin){
+        try{
+            const response = await cartsService.deleteProduct(cid,pid);
+            res.status(200).redirect(`/api/carts/${cid}`);
+        }catch(err){
+            res.status(500).send(err.message);
+        }
+    }else{
+        req.flash("error", "You don't have access to this section");
+        res.status(401).redirect("/api/products");
     }
 }
 
@@ -69,30 +81,23 @@ const addProductsToCart = async (req,res) =>{
     const {productId, quantity} = req.body;
     const result = await productsService.getOne(productId);
     if(req.session.user.admin){
-        res.status(401).send("No tienes Acceso");
+        req.flash("error", "You can't add products to cart as admin");
+        res.status(401).redirect("/api/products");
     }else if(req.session.user.premium && result.owner === req.session.user.email){
-        res.status(401).send("No puedes agregar tus productos al carrito");
+        req.flash("error", "you can't add your products to cart");
+        res.status(401).redirect("/api/products");
     }else if(quantity > result.stock){
-        res.send("No hay suficiente stock disponible de ese producto");
+        req.flash("error", "Error, product is not in stock");
+        res.status(401).redirect("/api/products");
     }else{
         try{
             const response = await cartsService.addProduct(cid, productId, quantity);
             res.status(200).redirect("/api/products");
         }catch(error){
-            throw error;
+            req.flash("error", "Internal Server Error");
+            res.status(500).redirect("/api/products");
         }
     }     
-}
-
-const replaceProductsToCart = async (req, res) =>{
-    const { cid } = req.params;
-    const products = req.body;
-    try{
-        const response = await cartsService.replaceProducts(cid, products);
-        res.status(200).send({ message: "Carrito Actualizado con nuevos productos", response });
-    }catch (err) {
-        res.status(500).send(err.message);
-    }
 }
 
 const updateProductByCart = async (req,res) =>{
@@ -106,9 +111,10 @@ const updateProductByCart = async (req,res) =>{
     
     try{
         const response = await cartsService.updateProduct(cid,productObject);
-        res.status(200).send({ message: "Producto Actualizado", response });
+        res.status(200).send({ message: "Product Updated", response });
     }catch (err) {
-        res.status(500).send(err.message);
+        req.flash("error", "Internal Server Error");
+        res.status(500).redirect("/api/products");
     }
 }
 
@@ -117,9 +123,12 @@ const finalizePurchase = async (req,res) =>{
     const user = req.session.user.email;
     try{
         const response = await cartsService.finalizePurchase(cid, user);
-        res.redirect("/api/products");
+        req.flash("success", "Successful purchase");
+        res.status(500).redirect(`/api/carts/${cid}`);
     }catch(error){
-        res.status(500).send(error.message);
+        req.flash("error", "Internal Server Error");
+        res.status(500).redirect("/api/products");
     }
 }
-module.exports = {getAllCarts, getCartById, createCart, finalizePurchase, deleteAllProductsByCart, deleteProductByCart, replaceProductsToCart, updateProductByCart, addProductsToCart};
+
+module.exports = {getAllCarts, getCartById, createCart, finalizePurchase, deleteAllProductsByCart, deleteProductByCart, updateProductByCart, addProductsToCart};

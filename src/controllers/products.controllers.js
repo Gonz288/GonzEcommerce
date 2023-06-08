@@ -5,16 +5,16 @@ const multer = require('multer');
 const fs = require("fs");
 const nodemailer = require("nodemailer");
 const {logger} = require("../config/utils");
+const config = require("../config/config");
 
 const transport = nodemailer.createTransport({
     service:'gmail',
     port: 587,
     auth:{
-        user:'gonzagonzalez288@gmail.com',
+        user:config.EMAIL_USER,
         pass:'icunvygjuhenqqpd'
     }
 });
-
 
 const storage = multer.diskStorage({
     destination: function(req,file,cb){
@@ -26,6 +26,14 @@ const storage = multer.diskStorage({
     }
 });
 const upload = multer({storage: storage});
+
+const deleteThumbnail = async (thumbnailPath) => {
+    try {
+        await fs.promises.unlink(thumbnailPath);
+    } catch (error) {
+        logger.error(`Failed to eliminate thumbnail: ${error}`);
+    }
+};
 
 const getAllProducts = async (req, res) => {
     const limit = req.query.limit || 8;
@@ -133,7 +141,7 @@ const getProductsBySearch = async (req, res) => {
 };
 
 const createProduct = async (req, res) =>{
-    if(req.session.user.admin | req.session.user.premium){
+    if(req.session.user.admin || req.session.user.premium){
         upload.single('thumbnail')(req,res,async (err) =>{
             const {
                 title,
@@ -148,11 +156,7 @@ const createProduct = async (req, res) =>{
             const response = await productsService.getByCode(code);
             if (!title || !description || !code || !price || !stock || !category || !status || response.length >= 1) {
                 fs.unlink(`./src/public/img/products/${req.file.filename}`, (err) => {
-                    if (err) {
-                        console.error('Error al eliminar la imagen:', err);
-                    } else {
-                        console.log('Imagen eliminada correctamente');
-                    }
+                    if (err) logger.error('Failed to eliminate thumbnail:', err);
                 });
                 res.status(400).redirect("/api/products",req.flash("error", "Couldn't create product"));
                 return;
@@ -173,7 +177,8 @@ const createProduct = async (req, res) =>{
             }
         });
     }else{
-        res.status(401).send("No tienes Acceso.")
+        req.flash("error","You don't have access to this section");
+        res.status(401).redirect("/api/products");
     }
 };
 
@@ -182,12 +187,10 @@ const deleteProduct = async (req,res) =>{
         const { id } = req.params;
         try {
             const result = await productsService.delete(id);
-            fs.unlink(`./src/public/${result.thumbnail}`, (error) => {
-                if (error) logger.error(`Failed to eliminate thumbnail: ${error}`)
-            });
+            await deleteThumbnail(`./src/public/${result.thumbnail}`);
             if(result.owner !== "admin"){
                 let resultEmail = await transport.sendMail({
-                    from:'"GonzE-Commerce" <gonzagonzalez288@gmail.com>',
+                    from:`"GonzE-Commerce" <${config.EMAIL_USER}>`,
                     to: result.owner,
                     subject: "Your product was eliminated, GonzE-Commerce",
                     html: `
@@ -212,13 +215,7 @@ const deleteProduct = async (req,res) =>{
             const product = await productsService.getOne(id);
             if(product.owner === req.session.user.email){
                 const result = await productsService.delete(id);
-                fs.unlink(`./src/public/${result.thumbnail}`, (err) => {
-                    if (err) {
-                        console.error('Error al eliminar la imagen:', err);
-                    } else {
-                        console.log('Imagen eliminada correctamente');
-                    }
-                });
+                await deleteThumbnail(`./src/public/${result.thumbnail}`);
                 req.flash("success","Product was deleted successfully");
                 res.status(200).redirect("/api/products");
             }else{
@@ -261,11 +258,7 @@ const updateProduct = async (req,res) =>{
                     if(req.file){
                         thumbnail = `/img/products/${req.file.filename}`;          
                         fs.unlink(`./src/public/${response[0].thumbnail}`, (err) => {
-                            if (err) {
-                                console.error('Error al eliminar la imagen:', err);
-                            } else {
-                                console.log('Imagen eliminada correctamente');
-                            }
+                            if (err) logger.error('Failed to delete thumbnail:', err);
                         });
                     }
                     const result = await productsService.update(id, {
@@ -285,7 +278,8 @@ const updateProduct = async (req,res) =>{
             }
         });
     }else{
-        res.status(401).send("No tienes Acceso");
+        req.flash("error","You don't have access to this section");
+        res.status(401).redirect("/api/products");
     }
 };
 

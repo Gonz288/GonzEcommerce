@@ -18,10 +18,10 @@
                     <div class="card-body">
                         <h5 class="text-success fs-4 fw-semibold">Price: ${{product.price}}</h5>
                         <div class="d-flex m-0 p-0">
-                            <button class="btn fs-4" onclick="restar()">-</button>
-                            <div class="count border border-secondary rounded justify-content-center align-items-center py-2 px-4"><p class="fs-4 m-0 p-0" id="quantity">1</p></div>
-                            <button class="btn fs-4" onclick="sumar()">+</button>
                             {{#if user}}
+                                <button class="btn fs-4" onclick="subtract()">-</button>
+                                <div class="count border border-secondary rounded justify-content-center align-items-center py-2 px-4"><p class="fs-4 m-0 p-0" id="quantity">1</p></div>
+                                <button class="btn fs-4" onclick="add()">+</button>
                                 <form method="POST" action="/api/carts/{{user.cartId}}">
                                     <input type="hidden" name="productId" value="{{product.id}}">
                                     <input type="hidden" name="quantity" value="1" id="quantityInput">

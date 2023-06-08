@@ -18,8 +18,8 @@ class CartsRepository{
         return result;
     }
 
-    deleteAllProducts = async (cartId) =>{
-        let result = await this.dao.deleteAllProducts(cartId);
+    deleteAllProducts = async (cid) =>{
+        let result = await this.dao.deleteAllProducts(cid);
         return result;
     }
 
@@ -30,11 +30,6 @@ class CartsRepository{
 
     addProduct = async (cid, productId,quantity) =>{
         let result = await this.dao.addProduct(cid,productId,quantity);
-        return result;
-    }
-
-    replaceProducts = async(cartId, productsArray) =>{
-        let result = await this.dao.updateAll(cartId,productsArray);
         return result;
     }
 

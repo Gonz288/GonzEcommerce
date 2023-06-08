@@ -1,7 +1,6 @@
 const express = require("express");
 const sessionRouter = express.Router();
 const passport = require("passport");
-const usersModel = require("../dao/mongo/models/usersModel");
 
 sessionRouter.get("/github", passport.authenticate("github", {scope: ["user: email"]}), async(req,res)=>{});
 sessionRouter.get("/githubcallback", passport.authenticate("github", {failureRedirect: "/login"}), async(req,res)=>{

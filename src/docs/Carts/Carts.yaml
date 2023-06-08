@@ -1,62 +1,62 @@
 paths:
   /api/carts/:
     get:
-      summary: Obtiene todos los carritos
+      summary: Get all carts
       tags:
         - Carts
       responses:
         "200":
-          description: Los Carritos fueron obtenidos satisfactoriamente
+          description: Carts were obtained successfully
         "500":
-          description: Error interno del servidor, usualmente generado por una query defectuosa o una falla de la conexion con la base de datos
+          description: Internal server error, usually caused by a faulty query or a database connection failure
     post:
-      summary: Crear Carrito
+      summary: Create Cart
       tags:
         - Carts
       responses:
         "200":
-          description: Se ha creado el carrito exitosamente
+          description: Cart created successfully
         "500":
-          description: Error interno del servidor, usualmente generado por una query defectuosa o una falla de la conexion con la base de datos
+          description: Internal server error, usually caused by a faulty query or a database connection failure
   /api/carts/{cid}:
     get:
-      summary: Obtiene un carrito por id
+      summary: Get a cart by ID
       tags:
         - Carts
       parameters:
         - in: path
           name: cid
           required: true
-          description: Id del carrito que se quiere buscar
+          description: ID of the cart to be retrieved
           schema:
             $type: String
       responses:
         "200":
-          description: El carrito fue obtenido satisfactoriamente
+          description: Cart retrieved successfully
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/Cart"
         "500":
-          description: Error interno de servidor, usualmente generado por una query defectuosa o una falla de la conexion con la base de datos
+          description: Internal server error, usually caused by a faulty query or a database connection failure
         "404":
-          description: No tiene acceso, se debe loguear primero
+          description: Access denied, please log in first
     delete:
-      summary: Eliminar productos del carrito
+      summary: Delete products from the cart
       tags:
         - Carts
       parameters:
         - in: path
           name: cid
           required: true
-          description: Id del carrito
+          description: Cart ID
           schema:
             $type: String
       responses:
         "200":
-          description: Productos eliminados correctamente
+          description: Products deleted successfully
         "500":
-          description: Error interno del servidor, usualmente generado por una query defectuosa o una falla de la conexion con la base de datos
+          description: Internal server error, usually caused by a faulty query or a database connection failure
 components:
   schemas:
     Cart:
@@ -64,11 +64,11 @@ components:
       properties:
         _id:
           type: ObjectId
-          description: Id autogenerado de mongo
+          description: Auto-generated MongoDB ID
           example: ObjectId("642de9c5a9771dcd669f827c")
         products:
           type: Array
-          description: Array de productos que fueron agregados al carrito
+          description: Array of products added to the cart
       example:
         _id: ObjectId("642de9c5a9771dcd669f827c")
         products: "[{product: 63e5dbf236aa907696f22668, quantity: 8}, {product:64519a8f76a8dc814b885c66m, quantity: 1}]"

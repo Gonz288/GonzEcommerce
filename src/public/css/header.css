@@ -17,6 +17,12 @@
     margin-top: .125em;
     margin-left: .125em;
 }
+.btn-search:hover{
+    background-color: #00ca6f;
+}
+.btn-search:active{
+    background-color: #00ca6f;
+}
 @media screen and (min-width: 769px){
 .dropend:hover > .drop-ul{
     position: absolute;

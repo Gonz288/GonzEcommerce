@@ -25,7 +25,7 @@
                             <div class="card-body bg-dark border-top border-secondary">
                                 <h5 class="card-title text-white">{{this.description}}</h5>
                                 <p class="fs-4 fw-semibold pcolor">${{this.price}}</p>
-                                {{#if ../user.admin }}
+                                {{#if ../user.admin}}
                                     <div class="buttons d-flex justify-content-end">
                                         <form action="/api/products/delete/{{this.id}}?_method=DELETE" method="POST">
                                             <input type="hidden" name="_method" value="DELETE">
@@ -34,6 +34,15 @@
                                         <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalPutProductId{{this.id}}"><i class="bi bi-pencil-square"></i></button>
                                     </div>
                                 {{/if}}
+                                {{#ifCond this.owner '===' ../user.email}}
+                                    <div class="buttons d-flex justify-content-end">
+                                        <form action="/api/products/delete/{{this.id}}?_method=DELETE" method="POST">
+                                            <input type="hidden" name="_method" value="DELETE">
+                                            <button type="submit" class="btn btn-danger"><i class="bi bi-trash"></i></button>
+                                        </form>
+                                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalPutProductId{{this.id}}"><i class="bi bi-pencil-square"></i></button>
+                                    </div>
+                                {{/ifCond}}
                             </div>
                             <div class="card-footer bg-dark" style="background-color: none; background:none;">
                                 <button class="btn btn-products"><a href="/api/products/{{this.id}}" class="nav-link"> View more </a></button>
