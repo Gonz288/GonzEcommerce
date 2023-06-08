@@ -4,7 +4,8 @@
   "description": "Desafio Complementario",
   "main": "app.js",
   "scripts": {
-    "test": "mocha test/Supertest.test.js"
+    "test": "mocha test/Supertest.test.js",
+    "build": "CI=false react-scripts build"
   },
   "author": "",
   "license": "ISC",

@@ -118,6 +118,9 @@ app.use((req, res, next)=>{
 });
 
 //Routes
+app.get("/", (req,res)=>{
+    res.status(200).redirect("/api/products");
+});
 app.get("/loggerTest", (req,res)=>{
     req.logger.debug("Debug test");
     req.logger.info("Info test");
@@ -138,3 +141,7 @@ app.use("/test", testRouter);
 app.use("/api/users",usersRouter);
 app.use(errorHandler);
 app.use('/apidocs', swaggerUiExpress.serve, swaggerUiExpress.setup(specs));
+
+app.use((req, res, next) => {
+    res.redirect('/api/products');
+});
