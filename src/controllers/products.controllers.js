@@ -251,6 +251,7 @@ const updateProduct = async (req,res) =>{
             let responseId = response.length > 0 ? response[0]._id.toString() : id;
 
             if (!title || !description || !code || !price || !stock || !category || responseId !== id) {
+                req.flash("error","You didn't complete all the fields")
                 res.status(400).redirect("/api/products"); 
             }else{
                 try{
@@ -271,8 +272,10 @@ const updateProduct = async (req,res) =>{
                         category,
                         status,
                     });
+                    req.flash("success","Product Updated successfully");
                     res.status(500).redirect("/api/products");
                 }catch(error){
+                    req.flash("error","Internal Server Error");
                     res.status(500).redirect("/api/products");
                 }
             }

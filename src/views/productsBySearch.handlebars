@@ -13,38 +13,40 @@
         </div>
     </div>
     <div class="row">
-        <div class="col-3 col-xl-2">
+        <div class="col-12 col-xl-2 col-md-3 col-sm-4 mb-3">
             {{> verticalNav}}
         </div>
-        <div class="col-9 col-xl-10 px-5 px-xl-3">
+        <div class="col-12 col-xl-10 col-md-9 col-sm-8 px-xl-3">
             <div class="row row-cols-sm-1 row-cols-lg-2 row-cols-xl-3 row-cols-md-2 g-4">
                 {{#if notFound}}
                     <h4 class="text-white">Product not found</h4>
                 {{else}}
                     {{#each object}}
-                        <div class="col">
-                        <div class="card border border-secondary" style="max-height: 490px; min-height: 490px; background-color: none; background:none;">
-                                <img class="img-fluid" style="height: 250px; width: 320px; margin: 0 auto; padding: 25px" src="{{this.thumbnail}}" alt="{{this.title}}">
-                                <div class="card-body bg-dark border-top border-secondary">
-                                    <h5 class="card-title text-white">{{this.description}}</h5>
-                                    <p class="fs-4 fw-semibold pcolor">${{this.price}}</p>
-                                    {{#if ../user.admin }}
-                                        <div class="buttons d-flex justify-content-end">
-                                            <form action="/api/products/delete/{{this.id}}?_method=DELETE" method="POST">
-                                                <input type="hidden" name="_method" value="DELETE">
-                                                <button type="submit" class="btn btn-danger"><i class="bi bi-trash"></i></button>
-                                            </form>
-                                            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalPutProductId{{this.id}}"><i class="bi bi-pencil-square"></i></button>
-                                        </div>
-                                    {{/if}}
-                                </div>
-                                <div class="card-footer bg-dark" style="background-color: none; background:none;">
-                                    <button class="btn btn-products"><a href="/api/products/{{this.id}}" class="nav-link"> View more </a></button>
+                        <div class="col-12 col-xl-4 col-lg-6 col-md-6 col-sm-12">
+                            <div class="card border border-secondary" style="max-height: 490px; min-height: 490px; background-color: none; background:none;">
+                                    <div style="height:260px; width:auto;">
+                                        <img class="imgCards" src="{{this.thumbnail}}" alt="{{this.title}}">
+                                    </div>
+                                    <div class="card-body bg-dark border-top border-secondary">
+                                        <h5 class="card-title text-white">{{this.description}}</h5>
+                                        <p class="fs-4 fw-semibold pcolor">${{this.price}}</p>
+                                        {{#if ../user.admin }}
+                                            <div class="buttons d-flex justify-content-end">
+                                                <form action="/api/products/delete/{{this.id}}?_method=DELETE" method="POST">
+                                                    <input type="hidden" name="_method" value="DELETE">
+                                                    <button type="submit" class="btn btn-danger"><i class="bi bi-trash"></i></button>
+                                                </form>
+                                                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalPutProductId{{this.id}}"><i class="bi bi-pencil-square"></i></button>
+                                            </div>
+                                        {{/if}}
+                                    </div>
+                                    <div class="card-footer bg-dark" style="background-color: none; background:none;">
+                                        <button class="btn btn-products"><a href="/api/products/{{this.id}}" class="nav-link"> View more </a></button>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        <!-- Modal -->
-                        <div class="modal fade" id="modalPutProductId{{this.id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                            <!-- Modal -->
+                            <div class="modal fade" id="modalPutProductId{{this.id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                             <div class="modal-dialog">
                                 <div class="modal-content">
                                     <div class="modal-header">

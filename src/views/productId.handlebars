@@ -25,7 +25,7 @@
                                 <form method="POST" action="/api/carts/{{user.cartId}}">
                                     <input type="hidden" name="productId" value="{{product.id}}">
                                     <input type="hidden" name="quantity" value="1" id="quantityInput">
-                                    <button class="btn btn-success"><i class="bi bi-cart3"></i> Add to Cart</a></button>
+                                    <button class="btn btn-success btn-lg mt-1"><i class="bi bi-cart3"></i> Add to Cart</a></button>
                                 </form>
                             {{else}}
                                 <p class="fs-4 fw-semibold text-black">Log in to add products to cart</p>

@@ -1,0 +1,108 @@
+#brands{
+    background-color: #121212;
+    padding: 20px 0;
+    position: relative;
+    z-index: 99;
+}
+.container-slider{
+    display: grid;
+    place-items: center;
+}
+.container-slider .slider{
+    height: 250px;
+    margin: auto;
+    position: relative;
+    width: 100%;
+    display: grid;
+    place-items: center;
+    overflow: hidden;
+}
+.container-slider .slide-track{
+    display: flex;
+    width: calc(250px * 16); /*(250px * number of total images) */
+    animation: scroll 10s linear infinite;
+}
+.container-slider .slide-track .slide{
+    height: 200px;
+    width: 250px;
+    display: flex;
+    align-items: center;
+    perspective: 100px;
+}
+.container-slider .slide-track .slide img{
+    padding: 40px;
+    width: 100%;
+    transition: all 0.5s;
+}
+.container-slider .slide-track .content-gigabyte img{padding: 65px;}
+.container-slider .slide-track .content-nvidia img{padding: 60px;}
+.container-slider .slide-track .content-logitech img{padding: 60px;}
+.container-slider .slide-track .slide img:hover{
+    transform: translateZ(15px);
+}
+
+/*Change color img to Green*/
+.container-slider .slide-track .content-amd img:hover{
+    content: url("/img/icons/amd2.png");
+}
+.container-slider .slide-track .content-intel img:hover{
+    content: url("/img/icons/intel2.png");
+}
+.container-slider .slide-track .content-asus img:hover{
+    content: url("/img/icons/asus2.png");
+}
+.container-slider .slide-track .content-gigabyte img:hover{
+    content: url("/img/icons/gigabyte2.png");
+}
+.container-slider .slide-track .content-nvidia img:hover{
+    content: url("/img/icons/nvidia2.png");
+}
+.container-slider .slide-track .content-logitech img:hover{
+    content: url("/img/icons/logitech2.png");
+}
+.container-slider .slide-track .content-lenovo img:hover{
+    content: url("/img/icons/lenovo2.png");
+}
+.container-slider .slide-track .content-samsung img:hover{
+    content: url("/img/icons/samsung2.png");
+}
+
+.container-slider .slide-track:hover{
+animation-play-state: paused;
+}
+
+/* Box Shadow */
+.slider::before{
+background: linear-gradient(to right, #121212 0%, rgba(0, 0, 0, 0) 100%);
+content: '';
+height: 100%;
+position: absolute;
+width: 15%;
+z-index: 2;
+}
+.slider::after{
+background: linear-gradient(to left, #121212 0%, rgba(0, 0, 0, 0) 100%);
+content: '';
+height: 100%;
+position: absolute;
+width: 15%;
+z-index: 2;
+}
+.slider::before{
+left: 0;
+top: 0;
+}
+.slider::after{
+right: 0;
+top: 0;
+}
+
+/* Animation */
+@keyframes scroll{
+    0%{
+        transform: translateX(0);
+    }
+    100%{
+        transform: translateX(calc(-250px * 8)); /* (-250px * (number of total images / 2)) -> rounding down (33 / 2 == 16)*/
+    }
+}

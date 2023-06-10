@@ -13,15 +13,17 @@
         </div>
     </div>
     <div class="row">
-        <div class="col-3 col-xl-2">
+        <div class="col-12 col-xl-2 col-md-3 col-sm-4 mb-3">
             {{> verticalNav}}
         </div>
-        <div class="col-9 col-xl-10 px-5 px-xl-3">
-            <div class="row row-cols-sm-1 row-cols-lg-2 row-cols-xl-3 row-cols-md-2 g-4">
+        <div class="col-12 col-xl-10 col-md-9 col-sm-8 px-xl-3">
+            <div class="row g-4">
                 {{#each object.payload}}
-                    <div class="col">
-                        <div class="card border border-secondary" style="max-height: 490px; min-height: 490px; background-color: none; background:none;">
-                            <img class="img-fluid" style="height: 250px; width: 320px; margin: 0 auto; padding: 25px" src="{{this.thumbnail}}" alt="{{this.title}}">
+                    <div class="col-12 col-xl-4 col-lg-6 col-md-6 col-sm-12">
+                        <div class="card border border-secondary" style="max-height: 490px; height: 490px; background-color: none; background:none;">
+                            <div style="height:260px; width:auto;">
+                                <img class="imgCards" src="{{this.thumbnail}}" alt="{{this.title}}">
+                            </div>
                             <div class="card-body bg-dark border-top border-secondary">
                                 <h5 class="card-title text-white">{{this.description}}</h5>
                                 <p class="fs-4 fw-semibold pcolor">${{this.price}}</p>
@@ -91,7 +93,7 @@
                                             <label for="exampleInputEmail1" class="form-label">Thumbnail: </label>
                                             <img src="{{this.thumbnail}}" width="200px" height="150px" alt="{{this.title}}">
                                             <p class="form-label">Change Thumbnail: </p>
-                                            <input type="file" class="form-control" name="thumbnail" value="{{this.thumbnail}}" required>
+                                            <input type="file" class="form-control" name="thumbnail" value="{{this.thumbnail}}">
                                         </div>
                                         <div class="mb-3">
                                             <label for="exampleInputEmail1" class="form-label">Category</label>

@@ -1,9 +1,9 @@
 <div class="container-xl py-3">
     <div class="row d-flex justify-content-center align-items-center g-3">
-        <div class="col-3">
+        <div class="col-md-4">
             <a href="/api/products" class="navbar-brand"> <img src="/img/banners/logo.png" width="200px" height="70px" alt="Gonz E-commerce"></a>
         </div>
-        <div class="col-6">
+        <div class="col-md-4 ">
             <form role="search" action="/api/products/search/product" method="get">
                 <div class="input-group input-group-lg d-flex w-100 mx-auto">
                     <span class="input-group-text"><i class="bi bi-search"></i></span>
@@ -12,7 +12,7 @@
                 </div>
             </form>
         </div>
-        <div class="col-3">
+        <div class="col-md-4">
             <ul class="navbar-nav flex-row justify-content-around">
                 {{#if user}}
                     <li class="nav-item dropdown">
@@ -76,12 +76,12 @@
                                 <i class="bi bi-gpu-card"></i> Video Cards
                             </a>
                             <ul class="dropdown-menu drop-ul p-0 border border-2 rounded">
-                                <li><a class="dropdown-item pcolor-hover border border-1" href="/api/products/category/amd video cards"><i class="bi bi-amd"></i> AMD</a></li>
-                                <li><a class="dropdown-item pcolor-hover border border-1" href="/api/products/category/nvidia video cards"><i class="bi bi-nvidia"></i> Nvidia</a></li>
+                                <li><a class="dropdown-item pcolor-hover border border-1" href="/api/products/search/product?search=Videocard AMD"><i class="bi bi-amd"></i> AMD</a></li>
+                                <li><a class="dropdown-item pcolor-hover border border-1" href="/api/products/search/product?search=Videocard NVIDIA"><i class="bi bi-nvidia"></i> Nvidia</a></li>
                             </ul>
                         </li>
                         <li><a class="dropdown-item pcolor-hover border border-1" href="/api/products/category/refrigeration"><i class="bi bi-fan"></i> Refrigeration</a></li>
-                        <li><a class="dropdown-item pcolor-hover border border-1" href="/api/products/category/refrigeration"><i class="bi bi-usb-symbol"></i> Connectivity</a></li>
+                        <li><a class="dropdown-item pcolor-hover border border-1" href="/api/products/category/Connectivity"><i class="bi bi-usb-symbol"></i> Connectivity</a></li>
                     </ul>
                 </li>
                 <button class="navbar-toggler text-white pcolor-hover" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse2" aria-expanded="false" >

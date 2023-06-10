@@ -1,16 +1,131 @@
-<swiper-container class="mySwiper" pagination="true" pagination-dynamic-bullets="true" loop="true" navigation="true" autoplay-delay="3000" autoplay-disable-on-interaction="false">
+<swiper-container class="bannerSlider" pagination="true" pagination-dynamic-bullets="true" loop="true" navigation="true" autoplay-delay="3000" autoplay-disable-on-interaction="false">
     <swiper-slide><img src="/img/banners/banner1.svg" alt=""></swiper-slide>
     <swiper-slide><img src="/img/banners/banner2.svg" alt=""></swiper-slide>
     <swiper-slide><img src="/img/banners/banner3.svg" alt=""></swiper-slide>
 </swiper-container>
 
-<section class="principal-page">
-    <div class="container-lg">
-        <!--Create Product-->
-        {{#if user.admin}}
-            <button type="button" class="btn btn-primary my-3" data-bs-toggle="modal" data-bs-target="#modalCreateProductAdmin"><i class="bi bi-pencil-square"></i> Create Product</button>
+<section id="brands">
+    <div class="container-slider">
+        <div class="slider">
+            <div class="slide-track">
+                <div class="slide content-amd">
+                    <img src="/img/icons/amd.png" alt="amd">
+                </div>
+                <div class="slide content-intel">
+                    <img src="/img/icons/intel.png" alt="intel">
+                </div>
+                <div class="slide content-asus">
+                    <img src="/img/icons/asus.png" alt="asus">
+                </div>
+                <div class="slide content-gigabyte">
+                    <img src="/img/icons/gigabyte.png" alt="gigabyte">
+                </div>
+                <div class="slide content-nvidia">
+                    <img src="/img/icons/nvidia.png" alt="nvidia">
+                </div>
+                <div class="slide content-logitech">
+                    <img src="/img/icons/logitech.png" alt="logitech">
+                </div>
+                <div class="slide content-lenovo">
+                    <img src="/img/icons/lenovo.png" alt="lenovo">
+                </div>
+                <div class="slide content-samsung">
+                    <img src="/img/icons/samsung.png" alt="samsung">
+                </div>
+
+                <!-- images x2-->
+                <div class="slide content-amd">
+                    <img src="/img/icons/amd.png" alt="amd">
+                </div>
+                <div class="slide content-intel">
+                    <img src="/img/icons/intel.png" alt="intel">
+                </div>
+                <div class="slide content-asus" alt="asus">
+                    <img src="/img/icons/asus.png">
+                </div>
+                <div class="slide content-gigabyte">
+                    <img src="/img/icons/gigabyte.png" alt="gigabyte">
+                </div>
+                <div class="slide content-nvidia">
+                    <img src="/img/icons/nvidia.png" alt="nvidia">
+                </div>
+                <div class="slide content-logitech">
+                    <img src="/img/icons/logitech.png" alt="logitech">
+                </div>
+                <div class="slide content-lenovo">
+                    <img src="/img/icons/lenovo.png" alt="lenovo">
+                </div>
+                <div class="slide content-samsung">
+                    <img src="/img/icons/samsung.png" alt="samsung">
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="container-lg mb-5">
+    <!--Create Product-->
+    {{#if user.admin}}
+        <button type="button" class="btn btn-primary my-3" data-bs-toggle="modal" data-bs-target="#modalCreateProductAdmin"><i class="bi bi-pencil-square"></i> Create Product</button>
+        <!-- Modal Create Product-->
+        <div class="modal fade" id="modalCreateProductAdmin" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="exampleModalLabel">Create Product</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form action="/api/products" method="POST" enctype="multipart/form-data">
+                            <div class="mb-3">
+                                <label for="exampleInputEmail1" class="form-label">Title</label>
+                                <input type="text" class="form-control" name="title" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="exampleInputEmail1" class="form-label">Description</label>
+                                <input type="text" class="form-control" name="description" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="exampleInputEmail1" class="form-label">Code</label>
+                                <input type="text" class="form-control" name="code" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="exampleInputEmail1" class="form-label">Price</label>
+                                <input type="number" class="form-control" name="price" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="status">Status:</label>
+                                <select name="status" id="status">
+                                    <option value="true" selected>True</option>
+                                    <option value="false">False</option>
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label for="exampleInputEmail1" class="form-label">Stock</label>
+                                <input type="number" class="form-control" name="stock" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="exampleInputEmail1" class="form-label">Thumbnail</label>
+                                <input type="file" class="form-control" name="thumbnail" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="exampleInputEmail1" class="form-label">Category</label>
+                                <input type="text" class="form-control" name="category" required>
+                            </div>
+                    </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            <button id="btnSend" type="submit" class="btn btn-primary">Create</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    {{else}} 
+        {{#if user.premium}}
+            <button type="button" class="btn btn-primary my-3" data-bs-toggle="modal" data-bs-target="#modalCreateProductPremium"><i class="bi bi-pencil-square"></i> Create Product</button>
             <!-- Modal Create Product-->
-            <div class="modal fade" id="modalCreateProductAdmin" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal fade" id="modalCreateProductPremium" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                 <div class="modal-dialog">
                     <div class="modal-content">
                         <div class="modal-header">
@@ -55,98 +170,40 @@
                                     <input type="text" class="form-control" name="category" required>
                                 </div>
                         </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                <button id="btnSend" type="submit" class="btn btn-primary">Create</button>
-                            </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            <button id="btnSend" type="submit" class="btn btn-primary">Create</button>
+                        </div>
                         </form>
                     </div>
                 </div>
             </div>
-        {{else}} 
-            {{#if user.premium}}
-                <button type="button" class="btn btn-primary my-3" data-bs-toggle="modal" data-bs-target="#modalCreateProductPremium"><i class="bi bi-pencil-square"></i> Create Product</button>
-                <!-- Modal Create Product-->
-                <div class="modal fade" id="modalCreateProductPremium" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                    <div class="modal-dialog">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h1 class="modal-title fs-5" id="exampleModalLabel">Create Product</h1>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                            </div>
-                            <div class="modal-body">
-                                <form action="/api/products" method="POST" enctype="multipart/form-data">
-                                    <div class="mb-3">
-                                        <label for="exampleInputEmail1" class="form-label">Title</label>
-                                        <input type="text" class="form-control" name="title" required>
-                                    </div>
-                                    <div class="mb-3">
-                                        <label for="exampleInputEmail1" class="form-label">Description</label>
-                                        <input type="text" class="form-control" name="description" required>
-                                    </div>
-                                    <div class="mb-3">
-                                        <label for="exampleInputEmail1" class="form-label">Code</label>
-                                        <input type="text" class="form-control" name="code" required>
-                                    </div>
-                                    <div class="mb-3">
-                                        <label for="exampleInputEmail1" class="form-label">Price</label>
-                                        <input type="number" class="form-control" name="price" required>
-                                    </div>
-                                    <div class="mb-3">
-                                        <label for="status">Status:</label>
-                                        <select name="status" id="status">
-                                            <option value="true" selected>True</option>
-                                            <option value="false">False</option>
-                                        </select>
-                                    </div>
-                                    <div class="mb-3">
-                                        <label for="exampleInputEmail1" class="form-label">Stock</label>
-                                        <input type="number" class="form-control" name="stock" required>
-                                    </div>
-                                    <div class="mb-3">
-                                        <label for="exampleInputEmail1" class="form-label">Thumbnail</label>
-                                        <input type="file" class="form-control" name="thumbnail" required>
-                                    </div>
-                                    <div class="mb-3">
-                                        <label for="exampleInputEmail1" class="form-label">Category</label>
-                                        <input type="text" class="form-control" name="category" required>
-                                    </div>
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                <button id="btnSend" type="submit" class="btn btn-primary">Create</button>
-                            </div>
-                            </form>
-                        </div>
+        {{/if}}
+    {{/if}}
+
+    <!--Product Slider-->
+    {{#if error}}
+        <p class="text-danger error rounded p-2">{{error}}</p>
+    {{/if}}
+    {{#if success}}
+        <p class="text-success success rounded p-2">{{success}}</p>
+    {{/if}}
+    <h3 class="pcolor">Featured Products:</h3>
+    <swiper-container class="mySwiper" navigation="true" slides-per-view="auto"
+        space-between="30" free-mode="true" loop="false">
+        {{#each object.payload}}
+            <swiper-slide class="similarProducts">
+                <div class="card card-product text-start border border-secondary">
+                    <img src="{{this.thumbnail}}" alt="{{this.title}}">
+                    <div class="card-body bg-dark">
+                        <h5 class="card-title text-white">{{this.description}}</h5>
+                        <p class="fs-4 pcolor fw-semibold">${{this.price}}</p>
+                    </div>
+                    <div class="card-footer bg-dark" style="background-color: none; background:none;">
+                        <button class="btn btn-products"><a href="/api/products/{{this.id}}" class="nav-link"> View more </a></button>
                     </div>
                 </div>
-            {{/if}}
-        {{/if}}
-
-        <!--Product Slider-->
-        {{#if error}}
-            <p class="text-danger error rounded p-2">{{error}}</p>
-        {{/if}}
-        {{#if success}}
-            <p class="text-success success rounded p-2">{{success}}</p>
-        {{/if}}
-        <h3 class="pcolor">Featured Products:</h3>
-        <swiper-container class="mySwiper" navigation="true" slides-per-view="auto"
-            space-between="30" free-mode="true" loop="false">
-            {{#each object.payload}}
-                <swiper-slide class="similarProducts">
-                    <div class="card card-product  text-start">
-                        <img src="{{this.thumbnail}}" alt="{{this.title}}">
-                        <div class="card-body bg-dark">
-                            <h5 class="card-title text-white">{{this.description}}</h5>
-                            <p class="fs-4 pcolor fw-semibold">${{this.price}}</p>
-                        </div>
-                        <div class="card-footer bg-dark" style="background-color: none; background:none;">
-                            <button class="btn btn-products"><a href="/api/products/{{this.id}}" class="nav-link"> View more </a></button>
-                        </div>
-                    </div>
-                </swiper-slide>
-            {{/each}}
-        </swiper-container>
-    </div>
-</section>
+            </swiper-slide>
+        {{/each}}
+    </swiper-container>
+</div>
