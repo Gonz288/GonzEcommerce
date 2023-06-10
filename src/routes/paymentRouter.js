@@ -37,7 +37,7 @@ paymentRouter.get('/create-checkout-session/:cid', async (req, res) => {
         const session = await stripe.checkout.sessions.create({
             line_items,
             mode: 'payment',
-            success_url: `http://localhost:8080/api/carts/${cid}/purchase`,
+            success_url: `${baseUrl}/api/carts/${cid}/purchase`,
             cancel_url: `${baseUrl}/api/carts/${cid}`,
         });
         res.redirect(303, session.url);

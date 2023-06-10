@@ -195,7 +195,7 @@ const deleteProduct = async (req,res) =>{
                     subject: "Your product was eliminated, GonzE-Commerce",
                     html: `
                     <div>
-                        <h1>Your product was eliminated from GonzE-Commerce.</h1>
+                        <h1>Your product with id: ${id} was eliminated from GonzE-Commerce.</h1>
                         <h4>This is just a notice message </h4>
                     </div>
                     `,
