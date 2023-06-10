@@ -16,6 +16,9 @@ paymentRouter.get('/create-checkout-session/:cid', async (req, res) => {
         res.send("Your cart is empty!");
         return;
     }else{
+        const host = req.headers.host;
+        const protocol = req.protocol;
+        const baseUrl = `${protocol}://${host}`;
         let line_items = [];
         for(let product of cart.products){
             line_items.push(
@@ -35,7 +38,7 @@ paymentRouter.get('/create-checkout-session/:cid', async (req, res) => {
             line_items,
             mode: 'payment',
             success_url: `http://localhost:8080/api/carts/${cid}/purchase`,
-            cancel_url: `http://localhost:8080/api/carts/${cid}`,
+            cancel_url: `${baseUrl}/api/carts/${cid}`,
         });
         res.redirect(303, session.url);
     }

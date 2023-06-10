@@ -92,7 +92,8 @@ const addProductsToCart = async (req,res) =>{
     }else{
         try{
             const response = await cartsService.addProduct(cid, productId, quantity);
-            res.status(200).redirect("/api/products");
+            req.flash("success", "Product added to cart");
+            res.status(200).redirect(`/api/carts/${cid}`);
         }catch(error){
             req.flash("error", "Internal Server Error");
             res.status(500).redirect("/api/products");
